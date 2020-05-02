@@ -3,7 +3,7 @@
 //  SwiftSeedProject
 //
 //  Created by Brian Sztamfater on 30/04/2020.
-//  Copyright © 2020 Making Sense. All rights reserved.
+//  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
 import Foundation

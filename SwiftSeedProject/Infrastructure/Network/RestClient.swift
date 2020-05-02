@@ -30,7 +30,7 @@ final class RestClient {
         let task = URLSession.shared.dataTask(with: request) { data, response, responseError in
             guard let responseError = responseError else {
                 do {
-                    let json = try JSON(data: data!)
+                    let json = try JSON(data: data!, options: JSONSerialization.ReadingOptions.allowFragments)
                     let sanitizedJson = try target.errorSanitizer(json)
                     let parsedObject = processResponse(sanitizedJson) as! T
                     completion( DataResult { return parsedObject } )

@@ -24,6 +24,17 @@ public class Database {
     static var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         migrator.registerMigration("v1.0") { db in
+            try db.create(table: "posts") { t in
+                t.column("id", .text).primaryKey(onConflict: .replace)
+                t.column("subreddit", .text)
+                t.column("title", .text)
+                t.column("author", .text)
+                t.column("thumbnailUrl", .text)
+                t.column("numComments", .integer)
+                t.column("isVideo", .boolean)
+                t.column("publishedAt", .datetime)
+                t.column("wasViewed", .boolean)
+            }
             try db.create(table: "sources") { t in
                 t.column("id", .text).primaryKey(onConflict: .replace)
                 t.column("url", .text)

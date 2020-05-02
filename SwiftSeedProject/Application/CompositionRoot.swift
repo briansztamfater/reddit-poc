@@ -23,22 +23,15 @@ extension DependencyContainer {
             container.register(.singleton) { RestClient() as RestClient }
 
             // MARK: Services
-            container.register(.singleton){ try ArticleService(persistence: container.resolve(), restClient: container.resolve() as RestClient) as ArticleService}
-            container.register(.singleton){ try SourceService(persistence: container.resolve(), restClient: container.resolve() as RestClient) as SourceService}
-            
+            container.register(.singleton){ try PostService(persistence: container.resolve(), restClient: container.resolve() as RestClient) as PostService}
+
             // MARK: ViewModels
-            container.register { try SourceListViewModel(sourceService: container.resolve() as SourceService) as SourceListViewModel }
-            container.register { try NewsFeedViewModel(articleService: container.resolve() as ArticleService, sourceService: container.resolve() as SourceService) as NewsFeedViewModel }
+            container.register { try PostListViewModel(postService: container.resolve() as PostService) as PostListViewModel }
 
             // MARK: ViewControllers
-            container.register(tag: "SourceListVC") { SourceListViewController() }
+            container.register(tag: "PostListVC") { PostListViewController() }
                 .resolvingProperties { container, controller in
-                    controller.viewModel = try container.resolve() as SourceListViewModel
-            }
-            
-            container.register(tag: "NewsFeedCollectionViewController") { NewsFeedCollectionViewController() }
-                .resolvingProperties { container, controller in
-                    controller.viewModel = try container.resolve() as NewsFeedViewModel
+                    controller.viewModel = try container.resolve() as PostListViewModel
             }
             
             DependencyContainer.uiContainers = [container]
