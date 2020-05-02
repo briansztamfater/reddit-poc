@@ -27,13 +27,18 @@ extension DependencyContainer {
 
             // MARK: ViewModels
             container.register { try PostListViewModel(postService: container.resolve() as PostService) as PostListViewModel }
+            container.register { try PostDetailsViewModel(postService: container.resolve() as PostService) as PostDetailsViewModel }
 
             // MARK: ViewControllers
             container.register(tag: "PostListVC") { PostListViewController() }
                 .resolvingProperties { container, controller in
                     controller.viewModel = try container.resolve() as PostListViewModel
             }
-            
+            container.register(tag: "PostDetailsVC") { PostDetailsViewController() }
+                .resolvingProperties { container, controller in
+                    controller.viewModel = try container.resolve() as PostDetailsViewModel
+            }
+
             DependencyContainer.uiContainers = [container]
 
         }

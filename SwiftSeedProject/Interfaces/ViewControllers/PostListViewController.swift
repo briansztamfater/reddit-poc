@@ -43,6 +43,17 @@ class PostListViewController: UIViewController {
             .asObservable()
             .bind(to: postsTableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+        
+        postsTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.postsTableView?.deselectRow(at: indexPath, animated: true)
+                let post = weakSelf.viewModel.posts.value.first!.items[indexPath.row]
+                weakSelf.viewModel.selectPost(post)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupTableView() {

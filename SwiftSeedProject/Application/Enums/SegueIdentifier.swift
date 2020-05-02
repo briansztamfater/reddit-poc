@@ -9,5 +9,5 @@
 import Foundation
 
 class SegueIdentifier {
-    static let NewsFeed = "NewsFeed"
+    static let PostDetails = "PostDetails"
 }

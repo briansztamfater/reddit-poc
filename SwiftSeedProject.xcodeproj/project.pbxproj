@@ -38,6 +38,8 @@
 		C16D33EE245E098500C1EE48 /* PostListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33ED245E098500C1EE48 /* PostListViewModel.swift */; };
 		C16D33EF245E0B3B00C1EE48 /* PostViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BE1E5A1EA6676A00F96E28 /* PostViewCell.swift */; };
 		C16D33F2245E1C2D00C1EE48 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33F1245E1C2D00C1EE48 /* Date+Extensions.swift */; };
+		C16D33F4245E1E4D00C1EE48 /* PostDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33F3245E1E4D00C1EE48 /* PostDetailsViewController.swift */; };
+		C16D33F6245E1E7300C1EE48 /* PostDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33F5245E1E7300C1EE48 /* PostDetailsViewModel.swift */; };
 		C1B172A4245BA6E40048FBD8 /* CharacterSet+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B172A3245BA6E40048FBD8 /* CharacterSet+Extensions.swift */; };
 		C1C121A7217D728A00CCAD64 /* RGDBPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C121A3217D728A00CCAD64 /* RGDBPersistence.swift */; };
 		C1C121A8217D728A00CCAD64 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C121A4217D728A00CCAD64 /* Persistence.swift */; };
@@ -91,6 +93,8 @@
 		C16D33EB245E059000C1EE48 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		C16D33ED245E098500C1EE48 /* PostListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListViewModel.swift; sourceTree = "<group>"; };
 		C16D33F1245E1C2D00C1EE48 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		C16D33F3245E1E4D00C1EE48 /* PostDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsViewController.swift; sourceTree = "<group>"; };
+		C16D33F5245E1E7300C1EE48 /* PostDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailsViewModel.swift; sourceTree = "<group>"; };
 		C1B172A3245BA6E40048FBD8 /* CharacterSet+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Extensions.swift"; sourceTree = "<group>"; };
 		C1C121A3217D728A00CCAD64 /* RGDBPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGDBPersistence.swift; sourceTree = "<group>"; };
 		C1C121A4217D728A00CCAD64 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -225,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				A0B30DE41EAA5850000B5935 /* PostListViewController.swift */,
+				C16D33F3245E1E4D00C1EE48 /* PostDetailsViewController.swift */,
 			);
 			name = ViewControllers;
 			path = Interfaces/ViewControllers;
@@ -339,6 +344,7 @@
 				C103B7CB217D970D00625EB9 /* ViewModelBase.swift */,
 				C16D33EB245E059000C1EE48 /* PostViewModel.swift */,
 				C16D33ED245E098500C1EE48 /* PostListViewModel.swift */,
+				C16D33F5245E1E7300C1EE48 /* PostDetailsViewModel.swift */,
 			);
 			name = ViewModels;
 			sourceTree = "<group>";
@@ -563,12 +569,14 @@
 				C16D33E2245DE65D00C1EE48 /* RestClient+PostEndpoints.swift in Sources */,
 				A0F32F551E9D759D00A209EB /* RestClient.swift in Sources */,
 				A0F32F561E9D759D00A209EB /* DataResult.swift in Sources */,
+				C16D33F4245E1E4D00C1EE48 /* PostDetailsViewController.swift in Sources */,
 				C16D33E8245DF6A300C1EE48 /* Post+Columns.swift in Sources */,
 				C1B172A4245BA6E40048FBD8 /* CharacterSet+Extensions.swift in Sources */,
 				A0B30DE51EAA5850000B5935 /* PostListViewController.swift in Sources */,
 				D34AC7DF1EA4EF8200BB742E /* ErrorCode.swift in Sources */,
 				9CC3846F1E7C17AD00595171 /* AppDelegate.swift in Sources */,
 				C1C121AA217D728A00CCAD64 /* Database.swift in Sources */,
+				C16D33F6245E1E7300C1EE48 /* PostDetailsViewModel.swift in Sources */,
 				A0ADA8BF1E9FE343006945CC /* BaseService.swift in Sources */,
 				C103B7CC217D970D00625EB9 /* ViewModelBase.swift in Sources */,
 				C103B7D8217D98E300625EB9 /* SegueIdentifier.swift in Sources */,

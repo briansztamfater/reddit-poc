@@ -22,7 +22,7 @@ class PostListViewModel: ViewModelBase {
         
     public func selectPost(_ postViewModel: PostViewModel) {
         postService.currentPostId = postViewModel.identifier.value
-        navigationDelegate?.navigate(SegueIdentifier.NewsFeed)
+        navigationDelegate?.navigate(SegueIdentifier.PostDetails)
     }
     
     public func getTopPosts() {
