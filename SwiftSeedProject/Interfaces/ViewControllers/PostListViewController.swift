@@ -24,6 +24,7 @@ class PostListViewController: UIViewController {
         configureCell: { (_, tv, indexPath, viewModel) in
             let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
             cell.viewModel = viewModel
+            cell.setupUI()
             cell.configureBindings()
             return cell
     })

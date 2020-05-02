@@ -37,6 +37,7 @@
 		C16D33EC245E059000C1EE48 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33EB245E059000C1EE48 /* PostViewModel.swift */; };
 		C16D33EE245E098500C1EE48 /* PostListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33ED245E098500C1EE48 /* PostListViewModel.swift */; };
 		C16D33EF245E0B3B00C1EE48 /* PostViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BE1E5A1EA6676A00F96E28 /* PostViewCell.swift */; };
+		C16D33F2245E1C2D00C1EE48 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16D33F1245E1C2D00C1EE48 /* Date+Extensions.swift */; };
 		C1B172A4245BA6E40048FBD8 /* CharacterSet+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B172A3245BA6E40048FBD8 /* CharacterSet+Extensions.swift */; };
 		C1C121A7217D728A00CCAD64 /* RGDBPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C121A3217D728A00CCAD64 /* RGDBPersistence.swift */; };
 		C1C121A8217D728A00CCAD64 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C121A4217D728A00CCAD64 /* Persistence.swift */; };
@@ -89,6 +90,7 @@
 		C16D33E9245DF6C500C1EE48 /* Post+Persistable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Post+Persistable.swift"; sourceTree = "<group>"; };
 		C16D33EB245E059000C1EE48 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		C16D33ED245E098500C1EE48 /* PostListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListViewModel.swift; sourceTree = "<group>"; };
+		C16D33F1245E1C2D00C1EE48 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		C1B172A3245BA6E40048FBD8 /* CharacterSet+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Extensions.swift"; sourceTree = "<group>"; };
 		C1C121A3217D728A00CCAD64 /* RGDBPersistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGDBPersistence.swift; sourceTree = "<group>"; };
 		C1C121A4217D728A00CCAD64 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 			isa = PBXGroup;
 			children = (
 				A0F32F661E9D778000A209EB /* Dictionary+Extensions.swift */,
+				C16D33F1245E1C2D00C1EE48 /* Date+Extensions.swift */,
 				C1B172A3245BA6E40048FBD8 /* CharacterSet+Extensions.swift */,
 			);
 			name = Extensions;
@@ -577,6 +580,7 @@
 				A0F32F671E9D778000A209EB /* Dictionary+Extensions.swift in Sources */,
 				C16D33E4245DE84900C1EE48 /* Post.swift in Sources */,
 				C103B7CE217D976000625EB9 /* UIViewController+NavigationDelegate.swift in Sources */,
+				C16D33F2245E1C2D00C1EE48 /* Date+Extensions.swift in Sources */,
 				C1C121A7217D728A00CCAD64 /* RGDBPersistence.swift in Sources */,
 				C16D33EC245E059000C1EE48 /* PostViewModel.swift in Sources */,
 				C103B7D2217D97D300625EB9 /* NavigationDelegate.swift in Sources */,
