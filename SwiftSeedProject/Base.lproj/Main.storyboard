@@ -47,8 +47,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GFx-gZ-J0L">
-                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GFx-gZ-J0L">
+                                <rect key="frame" x="0.0" y="44" width="375" height="573"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" selectionStyle="blue" indentationWidth="10" reuseIdentifier="PostViewCell" id="o6v-et-nXv" customClass="PostViewCell" customModule="SwiftSeedProject" customModuleProvider="target">
@@ -167,12 +167,26 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49u-oS-NZO">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <color key="backgroundColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="nKw-VO-Z8k"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Dismiss All">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="49u-oS-NZO" firstAttribute="top" secondItem="GFx-gZ-J0L" secondAttribute="bottom" id="2iE-7p-5ne"/>
+                            <constraint firstItem="EJ1-pq-UPd" firstAttribute="top" secondItem="49u-oS-NZO" secondAttribute="bottom" id="7sx-AU-Vd2"/>
                             <constraint firstAttribute="trailing" secondItem="GFx-gZ-J0L" secondAttribute="trailing" id="JQU-XZ-TMD"/>
-                            <constraint firstItem="EJ1-pq-UPd" firstAttribute="top" secondItem="GFx-gZ-J0L" secondAttribute="bottom" id="VBP-u1-tNX"/>
                             <constraint firstItem="GFx-gZ-J0L" firstAttribute="leading" secondItem="1sp-bn-0hQ" secondAttribute="leading" id="aC2-l4-LuI"/>
+                            <constraint firstItem="49u-oS-NZO" firstAttribute="leading" secondItem="1sp-bn-0hQ" secondAttribute="leading" id="axG-6z-3vo"/>
+                            <constraint firstAttribute="trailing" secondItem="49u-oS-NZO" secondAttribute="trailing" id="fsa-fz-y2V"/>
                             <constraint firstItem="GFx-gZ-J0L" firstAttribute="top" secondItem="Roz-sE-2k1" secondAttribute="bottom" id="nV9-n1-gf1"/>
                         </constraints>
                     </view>
@@ -181,13 +195,14 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="dipTag" value="PostListVC"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="btnDismissAll" destination="49u-oS-NZO" id="eyp-m8-7MO"/>
                         <outlet property="postsTableView" destination="GFx-gZ-J0L" id="Bml-Sv-hNL"/>
                         <segue destination="7or-Wk-jyv" kind="showDetail" identifier="PostDetails" id="Acv-Vv-Mix"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z4W-14-fVq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="559" y="340"/>
+            <point key="canvasLocation" x="557.60000000000002" y="339.58020989505252"/>
         </scene>
         <!--Post Details View Controller-->
         <scene sceneID="oOY-yf-cPa">

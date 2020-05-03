@@ -15,6 +15,7 @@ import UIKit
 class PostListViewController: UIViewController {
 
     @IBOutlet weak var postsTableView: UITableView!
+    @IBOutlet weak var btnDismissAll: UIButton!
     let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
     let refreshControl = UIRefreshControl()
 
@@ -132,6 +133,16 @@ class PostListViewController: UIViewController {
                     return
                 }
                 weakSelf.viewModel.refreshAll()
+            })
+            .disposed(by: disposeBag)
+
+        btnDismissAll.rx.tap
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.viewModel.deleteAll()
             })
             .disposed(by: disposeBag)
     }

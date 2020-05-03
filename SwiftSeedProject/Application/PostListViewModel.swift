@@ -62,6 +62,18 @@ class PostListViewModel: ViewModelBase {
         deletePost(at: postIndex)
     }
     
+    public func deleteAll() {
+        if (posts.value.count > 0) {
+            posts.accept([])
+            let posts = postService.getAll()
+            let subreddit = subredditService.getSubreddit(title: self.subreddit)
+            postService.persistence.deleteAll(objects: posts)
+            subredditService.persistence.delete(object: subreddit!)
+            self.lastItem = nil
+            self.shouldLoad = true
+        }
+    }
+
     public func getTopPosts(forceLoad: Bool = false) {
         if !isLoading.value && (shouldLoad || forceLoad) {
             isLoading.accept(true)
@@ -80,9 +92,10 @@ class PostListViewModel: ViewModelBase {
         if !isLoading.value {
             posts.accept([])
             let posts = postService.getAll()
-            let subreddit = subredditService.getSubreddit(title: self.subreddit)
             postService.persistence.deleteAll(objects: posts)
-            subredditService.persistence.delete(object: subreddit!)
+            if let subreddit = subredditService.getSubreddit(title: self.subreddit) {
+                subredditService.persistence.delete(object: subreddit)
+            }
             self.lastItem = nil
             self.shouldLoad = true
             self.getTopPosts()
