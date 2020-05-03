@@ -13,12 +13,23 @@ import RxDataSources
 class PostListViewModel: ViewModelBase {
     
     private let postService: PostService!
+    private let subredditService: SubredditService!
 
+    let subreddit = "CryptoCurrencies" // We could support multiple subreddits but let's hardcode this one for this test
+    let pageSize = 10 // We could make this value configurable but let's hardcode this one for this test
     let posts = BehaviorRelay<[SectionModel<String, PostViewModel>]>(value: [])
+    let isLoading = BehaviorRelay<Bool>(value: false)
     
-    init(postService: PostService) {
+    var shouldLoad: Bool = false
+    var lastItem: String? = nil
+
+    init(postService: PostService, subredditService: SubredditService) {
         self.postService = postService
+        self.subredditService = subredditService
+        let subreddit = subredditService.getSubreddit(title: self.subreddit)
+        self.lastItem = subreddit?.after
         let cachedPosts = postService.getAll(conditions: nil, orderBy: ["timestamp"])
+        self.shouldLoad = cachedPosts.count == 0
         posts.accept([SectionModel(model: "", items: cachedPosts.map { PostViewModel(post: $0) })])
     }
         
@@ -32,12 +43,17 @@ class PostListViewModel: ViewModelBase {
         navigationDelegate?.navigate(SegueIdentifier.PostDetails)
     }
     
-    public func getTopPosts() {
-        postService.getTopPostsFromServer(from: "CryptoCurrencies", onSuccess: { [weak self] posts in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.posts.accept([SectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
-        })
+    public func getTopPosts(forceLoad: Bool = false) {
+        if !isLoading.value && (shouldLoad || forceLoad) {
+            isLoading.accept(true)
+            postService.getTopPostsFromServer(from: subreddit, after: lastItem, limit: pageSize, onSuccess: { [weak self] posts in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.posts.accept([SectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
+                weakSelf.lastItem = posts.1.after
+                weakSelf.isLoading.accept(false)
+            })
+        }
     }
 }

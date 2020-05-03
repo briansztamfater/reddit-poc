@@ -15,6 +15,7 @@ import UIKit
 class PostListViewController: UIViewController {
 
     @IBOutlet weak var postsTableView: UITableView!
+    let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
 
     var viewModel: PostListViewModel!
     private let cellIdentifier = "PostViewCell"
@@ -31,11 +32,17 @@ class PostListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Top in CryptoCurrencies Subreddit"
+        title = "Top in r/CryptoCurrencies"
         viewModel.navigationDelegate = self
+        setupUI()
         setupTableView()
         configureBindings()
         viewModel.getTopPosts()
+    }
+    
+    private func setupUI() {
+        let barButton = UIBarButtonItem(customView: activityIndicator)
+        self.navigationItem.setLeftBarButton(barButton, animated: true)
     }
     
     private func configureBindings() {
@@ -44,6 +51,22 @@ class PostListViewController: UIViewController {
             .bind(to: postsTableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
         
+        viewModel.isLoading
+            .asObservable()
+            .subscribe(onNext: { [weak self] isLoading in
+                guard let weakSelf = self else {
+                    return
+                }
+                if isLoading {
+                    weakSelf.activityIndicator.startAnimating()
+                } else {
+                    DispatchQueue.main.async {
+                        weakSelf.activityIndicator.stopAnimating()
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+
         postsTableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 guard let weakSelf = self else {
@@ -54,6 +77,20 @@ class PostListViewController: UIViewController {
                 weakSelf.viewModel.selectPost(post)
             })
             .disposed(by: disposeBag)
+        
+        postsTableView.rx.didEndDragging
+            .subscribe(onNext: { [weak self] _ in
+                guard let weakSelf = self else {
+                    return
+                }
+                let currentOffset = weakSelf.postsTableView.contentOffset.y
+                let maximumOffset = weakSelf.postsTableView.contentSize.height - weakSelf.postsTableView.frame.size.height
+                if maximumOffset - currentOffset <= 10.0 {
+                    weakSelf.viewModel.getTopPosts(forceLoad: true)
+                }
+            })
+            .disposed(by: disposeBag)
+
     }
     
     private func setupTableView() {

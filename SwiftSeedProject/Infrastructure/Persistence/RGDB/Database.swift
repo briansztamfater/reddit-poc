@@ -36,6 +36,10 @@ public class Database {
                 t.column("wasViewed", .boolean)
                 t.column("timestamp", .double)
             }
+            try db.create(table: "subreddit") { t in
+                t.column("title", .text).primaryKey(onConflict: .replace)
+                t.column("after", .text)
+            }
         }
         return migrator
     }

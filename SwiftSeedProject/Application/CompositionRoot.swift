@@ -24,9 +24,10 @@ extension DependencyContainer {
 
             // MARK: Services
             container.register(.singleton){ try PostService(persistence: container.resolve(), restClient: container.resolve() as RestClient) as PostService}
+            container.register(.singleton){ try SubredditService(persistence: container.resolve(), restClient: container.resolve() as RestClient) as SubredditService}
 
             // MARK: ViewModels
-            container.register { try PostListViewModel(postService: container.resolve() as PostService) as PostListViewModel }
+            container.register { try PostListViewModel(postService: container.resolve() as PostService, subredditService: container.resolve() as SubredditService) as PostListViewModel }
             container.register { try PostDetailsViewModel(postService: container.resolve() as PostService) as PostDetailsViewModel }
 
             // MARK: ViewControllers
