@@ -18,14 +18,15 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet weak var lblAuthor: UILabel!
     @IBOutlet weak var imgThumbnail: UIImageView!
     @IBOutlet weak var lblDate: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
 
     var viewModel: PostDetailsViewModel!
     private let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
-       super.viewDidLoad()
-       viewModel.navigationDelegate = self
-       configureBindings()
+        super.viewDidLoad()
+        viewModel.navigationDelegate = self
+        configureBindings()
     }
 
     private func configureBindings() {

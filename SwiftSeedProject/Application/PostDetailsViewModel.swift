@@ -20,11 +20,12 @@ class PostDetailsViewModel: ViewModelBase {
     let publishedAt = BehaviorRelay<Date>(value: Date())
 
     init(postService: PostService) {
-        let post = postService.getEntityBy(id: postService.currentPostId!);
-        title.accept(post!.title!)
-        thumbnailUrl.accept(post!.thumbnailUrl!)
-        author.accept(post!.author!)
-        publishedAt.accept(post!.publishedAt!)
+        if let currentPostId = postService.currentPostId, let post = postService.getEntityBy(id: currentPostId) {
+            title.accept(post.title!)
+            thumbnailUrl.accept(post.thumbnailUrl!)
+            author.accept(post.author!)
+            publishedAt.accept(post.publishedAt!)
+        }
         self.postService = postService
     }
 }
