@@ -55,6 +55,13 @@ class PostListViewModel: ViewModelBase {
         postService.persistence.delete(object: post)
     }
     
+    public func deletePost(from viewModel: PostViewModel) {
+        let sections = posts.value
+        let currentSection = sections[0]
+        let postIndex = currentSection.items.firstIndex(of: viewModel)!
+        deletePost(at: postIndex)
+    }
+    
     public func getTopPosts(forceLoad: Bool = false) {
         if !isLoading.value && (shouldLoad || forceLoad) {
             isLoading.accept(true)

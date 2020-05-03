@@ -19,17 +19,11 @@ class PostListViewController: UIViewController {
     let refreshControl = UIRefreshControl()
 
     var viewModel: PostListViewModel!
+    var dataSource: RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>? = nil
+
     private let cellIdentifier = "PostViewCell"
     private let disposeBag = DisposeBag()
 
-    let dataSource = RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>(
-        configureCell: { (_, tv, indexPath, viewModel) in
-            let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
-            cell.viewModel = viewModel
-            cell.setupUI()
-            cell.configureBindings()
-            return cell
-    })
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +42,26 @@ class PostListViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.postsTableView.addSubview(refreshControl)
         
-        dataSource.canEditRowAtIndexPath = { dataSource, indexPath  in
+        dataSource = RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>(
+            configureCell: { (_, tv, indexPath, viewModel) in
+                let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
+                cell.viewModel = viewModel
+                cell.setupUI()
+                cell.configureBindings()
+                cell.btnDismiss.rx
+                    .tap
+                    .asDriver()
+                    .drive(onNext: { [weak self] in
+                        guard let weakSelf = self else {
+                            return
+                        }
+                        weakSelf.viewModel.deletePost(from: viewModel)
+                    })
+                    .disposed(by: cell.disposeBag)
+
+                return cell
+        })
+        dataSource!.canEditRowAtIndexPath = { dataSource, indexPath  in
           return true
         }
     }
@@ -56,7 +69,7 @@ class PostListViewController: UIViewController {
     private func configureBindings() {
         viewModel.posts
             .asObservable()
-            .bind(to: postsTableView.rx.items(dataSource: dataSource))
+            .bind(to: postsTableView.rx.items(dataSource: dataSource!))
             .disposed(by: disposeBag)
         
         viewModel.isLoading
