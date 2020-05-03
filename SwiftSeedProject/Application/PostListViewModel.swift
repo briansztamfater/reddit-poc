@@ -56,4 +56,17 @@ class PostListViewModel: ViewModelBase {
             })
         }
     }
+    
+    public func refreshAll() {
+        if !isLoading.value {
+            posts.accept([])
+            let posts = postService.getAll()
+            let subreddit = subredditService.getSubreddit(title: self.subreddit)
+            postService.persistence.deleteAll(objects: posts)
+            subredditService.persistence.delete(object: subreddit!)
+            self.lastItem = nil
+            self.shouldLoad = true
+            self.getTopPosts()
+        }
+    }
 }

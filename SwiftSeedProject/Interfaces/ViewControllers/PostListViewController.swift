@@ -16,6 +16,7 @@ class PostListViewController: UIViewController {
 
     @IBOutlet weak var postsTableView: UITableView!
     let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+    let refreshControl = UIRefreshControl()
 
     var viewModel: PostListViewModel!
     private let cellIdentifier = "PostViewCell"
@@ -43,6 +44,9 @@ class PostListViewController: UIViewController {
     private func setupUI() {
         let barButton = UIBarButtonItem(customView: activityIndicator)
         self.navigationItem.setLeftBarButton(barButton, animated: true)
+        
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.postsTableView.addSubview(refreshControl)
     }
     
     private func configureBindings() {
@@ -58,10 +62,13 @@ class PostListViewController: UIViewController {
                     return
                 }
                 if isLoading {
-                    weakSelf.activityIndicator.startAnimating()
+                    DispatchQueue.main.async {
+                        weakSelf.activityIndicator.startAnimating()
+                    }
                 } else {
                     DispatchQueue.main.async {
                         weakSelf.activityIndicator.stopAnimating()
+                        weakSelf.refreshControl.endRefreshing()
                     }
                 }
             })
@@ -91,6 +98,14 @@ class PostListViewController: UIViewController {
             })
             .disposed(by: disposeBag)
 
+        refreshControl.rx.controlEvent(.valueChanged)
+            .subscribe(onNext: { [weak self] in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.viewModel.refreshAll()
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupTableView() {
