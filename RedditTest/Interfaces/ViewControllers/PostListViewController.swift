@@ -48,7 +48,6 @@ class PostListViewController: UIViewController {
                 let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
                 cell.viewModel = viewModel
                 cell.setupUI()
-                cell.configureBindings()
                 cell.btnDismiss.rx
                     .tap
                     .asDriver()
@@ -59,7 +58,6 @@ class PostListViewController: UIViewController {
                         weakSelf.viewModel.deletePost(from: viewModel)
                     })
                     .disposed(by: cell.disposeBag)
-
                 return cell
         })
         dataSource!.canEditRowAtIndexPath = { dataSource, indexPath  in
@@ -70,6 +68,7 @@ class PostListViewController: UIViewController {
     private func configureBindings() {
         viewModel.posts
             .asObservable()
+            .distinctUntilChanged()
             .bind(to: postsTableView.rx.items(dataSource: dataSource!))
             .disposed(by: disposeBag)
         
@@ -98,8 +97,8 @@ class PostListViewController: UIViewController {
                     return
                 }
                 weakSelf.postsTableView?.deselectRow(at: indexPath, animated: true)
-                let post = weakSelf.viewModel.posts.value.first!.items[indexPath.row]
-                weakSelf.viewModel.selectPost(post)
+                weakSelf.viewModel.selectPost(at: indexPath.row)
+                weakSelf.postsTableView?.reloadData()
             })
             .disposed(by: disposeBag)
         

@@ -33,7 +33,10 @@ class PostListViewModel: ViewModelBase {
         posts.accept([AnimatableSectionModel(model: "", items: cachedPosts.map { PostViewModel(post: $0) })])
     }
         
-    public func selectPost(_ postViewModel: PostViewModel) {
+    public func selectPost(at index: Int) {
+        let sections = posts.value
+        let currentSection = sections[0]
+        let postViewModel = currentSection.items[index]
         postViewModel.wasViewed.accept(true)
         let postId = postViewModel.identifier.value
         let post = postService.getEntityBy(id: postId)!
@@ -83,6 +86,7 @@ class PostListViewModel: ViewModelBase {
                 }
                 weakSelf.posts.accept([AnimatableSectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
                 weakSelf.lastItem = posts.1.after
+                weakSelf.shouldLoad = posts.1.after!.count > 0
                 weakSelf.isLoading.accept(false)
             })
         }

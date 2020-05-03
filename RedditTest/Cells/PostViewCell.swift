@@ -15,8 +15,7 @@ final class PostViewCell: UITableViewCell {
     
     static let identifier = "PostViewCell"
     static let Height = 80.0
-    
-    
+
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblAuthor: UILabel!
     @IBOutlet weak var imgThumbnail: UIImageView!
@@ -27,17 +26,16 @@ final class PostViewCell: UITableViewCell {
     @IBOutlet weak var notReadViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var authorLabelLeadingConstraint: NSLayoutConstraint!
 
-    var viewModel: PostViewModel?
-
+    var viewModel: PostViewModel? {
+        didSet {
+            self.disposeBag = DisposeBag()
+            configureBindings()
+        }
+    }
     var disposeBag = DisposeBag()
     
     let vwNotReadWidth: CGFloat = 10
     let authorLabelLeading: CGFloat = 5
-
-    override public func prepareForReuse() {
-        super.prepareForReuse()
-        self.disposeBag = DisposeBag()
-    }
     
     public func setupUI() {
         self.vwNotRead.layer.cornerRadius = self.vwNotRead.bounds.size.height / 2
