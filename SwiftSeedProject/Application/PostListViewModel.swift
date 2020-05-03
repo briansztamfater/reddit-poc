@@ -43,6 +43,18 @@ class PostListViewModel: ViewModelBase {
         navigationDelegate?.navigate(SegueIdentifier.PostDetails)
     }
     
+    public func deletePost(at index: Int) {
+        var sections = posts.value
+        var currentSection = sections[0]
+        let postViewModel = currentSection.items[index]
+        currentSection.items.remove(at: index)
+        sections[0] = currentSection
+        posts.accept(sections)
+        let postId = postViewModel.identifier.value
+        let post = postService.getEntityBy(id: postId)!
+        postService.persistence.delete(object: post)
+    }
+    
     public func getTopPosts(forceLoad: Bool = false) {
         if !isLoading.value && (shouldLoad || forceLoad) {
             isLoading.accept(true)

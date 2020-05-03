@@ -47,6 +47,10 @@ class PostListViewController: UIViewController {
         
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.postsTableView.addSubview(refreshControl)
+        
+        dataSource.canEditRowAtIndexPath = { dataSource, indexPath  in
+          return true
+        }
     }
     
     private func configureBindings() {
@@ -85,6 +89,16 @@ class PostListViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        postsTableView.rx
+            .itemDeleted
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.viewModel.deletePost(at: indexPath.row)
+            })
+            .disposed(by: disposeBag)
+        
         postsTableView.rx.didEndDragging
             .subscribe(onNext: { [weak self] _ in
                 guard let weakSelf = self else {
@@ -95,6 +109,7 @@ class PostListViewController: UIViewController {
                 if maximumOffset - currentOffset <= 10.0 {
                     weakSelf.viewModel.getTopPosts(forceLoad: true)
                 }
+
             })
             .disposed(by: disposeBag)
 
