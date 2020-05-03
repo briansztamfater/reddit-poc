@@ -17,7 +17,7 @@ class PostListViewModel: ViewModelBase {
 
     let subreddit = "CryptoCurrencies" // We could support multiple subreddits but let's hardcode this one for this test
     let pageSize = 10 // We could make this value configurable but let's hardcode this one for this test
-    let posts = BehaviorRelay<[SectionModel<String, PostViewModel>]>(value: [])
+    let posts = BehaviorRelay<[AnimatableSectionModel<String, PostViewModel>]>(value: [])
     let isLoading = BehaviorRelay<Bool>(value: false)
     
     var shouldLoad: Bool = false
@@ -30,7 +30,7 @@ class PostListViewModel: ViewModelBase {
         self.lastItem = subreddit?.after
         let cachedPosts = postService.getAll(conditions: nil, orderBy: ["timestamp"])
         self.shouldLoad = cachedPosts.count == 0
-        posts.accept([SectionModel(model: "", items: cachedPosts.map { PostViewModel(post: $0) })])
+        posts.accept([AnimatableSectionModel(model: "", items: cachedPosts.map { PostViewModel(post: $0) })])
     }
         
     public func selectPost(_ postViewModel: PostViewModel) {
@@ -62,7 +62,7 @@ class PostListViewModel: ViewModelBase {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.posts.accept([SectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
+                weakSelf.posts.accept([AnimatableSectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
                 weakSelf.lastItem = posts.1.after
                 weakSelf.isLoading.accept(false)
             })

@@ -22,7 +22,7 @@ class PostListViewController: UIViewController {
     private let cellIdentifier = "PostViewCell"
     private let disposeBag = DisposeBag()
 
-    let dataSource = RxTableViewSectionedReloadDataSource<SectionModel<String, PostViewModel>>(
+    let dataSource = RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>(
         configureCell: { (_, tv, indexPath, viewModel) in
             let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
             cell.viewModel = viewModel

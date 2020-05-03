@@ -9,8 +9,19 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxDataSources
 
-class PostViewModel {
+class PostViewModel: IdentifiableType, Equatable {
+    typealias Identity = String
+
+    var identity: Identity {
+        return identifier.value
+    }
+
+    static func == (lhs: PostViewModel, rhs: PostViewModel) -> Bool {
+        return lhs.identifier.value == rhs.identifier.value
+    }
+
     let identifier: BehaviorRelay<String>
     let title: BehaviorRelay<String>
     let thumbnailUrl: BehaviorRelay<URL>
