@@ -18,7 +18,7 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet weak var lblAuthor: UILabel!
     @IBOutlet weak var imgThumbnail: UIImageView!
     @IBOutlet weak var lblDate: UILabel!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var vwHeader: UIView!
 
     var viewModel: PostDetailsViewModel!
     private let disposeBag = DisposeBag()
@@ -42,6 +42,10 @@ class PostDetailsViewController: UIViewController {
                     return
                 }
                 weakSelf.title = title
+                // Hide UI elements if no post is provided
+                weakSelf.lblTitle.isHidden = title.count == 0
+                weakSelf.vwHeader.isHidden = title.count == 0
+                weakSelf.imgThumbnail.isHidden = title.count == 0
             }
             .disposed(by: disposeBag)
 

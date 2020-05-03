@@ -261,6 +261,7 @@
                         <outlet property="lblAuthor" destination="7SM-VX-31L" id="k8x-pf-NBP"/>
                         <outlet property="lblDate" destination="CBc-Ms-M9i" id="7Dn-bA-gwp"/>
                         <outlet property="lblTitle" destination="FV8-Pk-SLk" id="d6I-BE-EhL"/>
+                        <outlet property="vwHeader" destination="1CG-QD-tq2" id="pDe-IN-HRV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h7A-7I-XGd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
