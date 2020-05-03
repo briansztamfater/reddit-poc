@@ -34,33 +34,7 @@ public class Database {
                 t.column("isVideo", .boolean)
                 t.column("publishedAt", .datetime)
                 t.column("wasViewed", .boolean)
-            }
-            try db.create(table: "sources") { t in
-                t.column("id", .text).primaryKey(onConflict: .replace)
-                t.column("url", .text)
-                t.column("detail", .text)
-                t.column("name", .text)
-                t.column("categoryRaw", .text)
-                t.column("languageRaw", .text)
-                t.column("countryRaw", .text)
-                t.column("sortByAvailable", .text)
-            }
-            try db.create(table: "articles") { t in
-                t.column("id", .integer).primaryKey(onConflict: .replace)
-                t.column("sourceId", .integer)
-                t.column("title", .text)
-                t.column("author", .text)
-                t.column("detail", .text)
-                t.column("url", .text)
-                t.column("urlToImage", .text)
-                t.column("publishedAt", .datetime)
-            }
-            try db.create(table: "logos") { t in
-                t.column("id", .integer).primaryKey(onConflict: .replace)
-                t.column("sourceId", .integer).unique(onConflict: .replace)
-                t.column("small", .text)
-                t.column("medium", .text)
-                t.column("large", .text)
+                t.column("timestamp", .double)
             }
         }
         return migrator

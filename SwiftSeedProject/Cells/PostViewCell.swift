@@ -16,6 +16,7 @@ final class PostViewCell: UITableViewCell {
     static let identifier = "PostViewCell"
     static let Height = 80.0
     
+    
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblAuthor: UILabel!
     @IBOutlet weak var imgThumbnail: UIImageView!
@@ -23,10 +24,15 @@ final class PostViewCell: UITableViewCell {
     @IBOutlet weak var lblComments: UILabel!
     @IBOutlet weak var vwNotRead: UIView!
     @IBOutlet weak var btnDismiss: UIButton!
+    @IBOutlet weak var notReadViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var authorLabelLeadingConstraint: NSLayoutConstraint!
 
     var viewModel: PostViewModel?
 
     var disposeBag = DisposeBag()
+    
+    let vwNotReadWidth: CGFloat = 10
+    let authorLabelLeading: CGFloat = 5
 
     override public func prepareForReuse() {
         super.prepareForReuse()
@@ -75,13 +81,15 @@ final class PostViewCell: UITableViewCell {
             .disposed(by: disposeBag)
         
         viewModel.wasViewed
-        .asObservable()
-        .bind { [weak self] wasViewed in
-            guard let weakSelf = self else {
-                return
+            .asObservable()
+            .bind { [weak self] wasViewed in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.vwNotRead.isHidden = wasViewed
+                weakSelf.notReadViewWidthConstraint.constant = wasViewed ? 0 : weakSelf.vwNotReadWidth
+                weakSelf.authorLabelLeadingConstraint.constant = wasViewed ? 0 : weakSelf.authorLabelLeading
             }
-            weakSelf.vwNotRead.isHidden = wasViewed
-        }
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
     }
 }

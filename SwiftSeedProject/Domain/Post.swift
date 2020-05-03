@@ -20,7 +20,8 @@ public class Post: PersistenceObject {
     var numComments: Int?
     var publishedAt: Date?
     var isVideo: Bool?
-    var wasViewed: Bool = false
+    var wasViewed: Bool?
+    var timestamp: Double?
 
     init(_ json: JSON) {
         updateWithJSON(json)
@@ -36,5 +37,6 @@ public class Post: PersistenceObject {
         self.numComments = json["num_comments"].intValue
         self.publishedAt = Date(timeIntervalSince1970: json["created_utc"].doubleValue)
         self.isVideo = json["is_video"].boolValue
+        self.timestamp = Double(Date().timeIntervalSince1970)
     }
 }

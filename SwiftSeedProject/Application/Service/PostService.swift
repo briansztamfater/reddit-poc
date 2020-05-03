@@ -18,7 +18,12 @@ final class PostService: BaseService<Post> {
                 return
             }
             do {
-                let posts = try result.unwrap()
+                let posts = try result.unwrap().map({ post -> Post in
+                    let cachedPost = weakSelf.getEntityBy(id: post.id!)
+                    post.wasViewed = cachedPost?.wasViewed
+                    post.timestamp = cachedPost?.timestamp ?? post.timestamp
+                    return post
+                })
                 weakSelf.persistence.saveAll(objects: posts)
                 onSuccess?(posts)
             } catch {

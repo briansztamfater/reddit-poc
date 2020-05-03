@@ -154,12 +154,14 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="authorLabelLeadingConstraint" destination="bpS-O9-EKq" id="GEa-Dg-7NB"/>
                                             <outlet property="btnDismiss" destination="BnZ-aa-hpu" id="8Uv-nB-mJ6"/>
                                             <outlet property="imgThumbnail" destination="ofA-y3-1s9" id="I6Z-cB-xuj"/>
                                             <outlet property="lblAuthor" destination="xHn-cf-jQ6" id="ylk-wX-J4q"/>
                                             <outlet property="lblComments" destination="q5k-1O-xxa" id="YRU-gR-ale"/>
                                             <outlet property="lblDate" destination="LUk-fu-sKr" id="jAW-0T-mwQ"/>
                                             <outlet property="lblTitle" destination="QGz-pz-Vi0" id="sle-yH-GQD"/>
+                                            <outlet property="notReadViewWidthConstraint" destination="sJD-4d-obd" id="nih-Ae-CUR"/>
                                             <outlet property="vwNotRead" destination="Emk-pj-D3c" id="pQN-uP-dCo"/>
                                         </connections>
                                     </tableViewCell>
@@ -286,6 +288,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="VWT-nz-E8h"/>
+        <segue reference="Acv-Vv-Mix"/>
     </inferredMetricsTieBreakers>
 </document>

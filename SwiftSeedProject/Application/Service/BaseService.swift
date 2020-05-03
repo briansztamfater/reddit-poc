@@ -18,8 +18,8 @@ class BaseService<T: PersistenceObject>  {
         self.restClient = restClient
     }
     
-    public func getAll() -> [T] {
-        return persistence.getAll()
+    public func getAll(conditions: [String : String]? = nil, orderBy attributeNames: [String]? = nil) -> [T] {
+        return persistence.getAll(conditions: conditions, orderBy: attributeNames)
     }
     
     public func getEntityBy(id: Int64) -> T? {

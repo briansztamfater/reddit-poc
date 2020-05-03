@@ -30,6 +30,6 @@ class PostViewModel {
         self.numComments = BehaviorRelay<Int>(value: post.numComments!)
         self.publishedAt = BehaviorRelay<Date>(value: post.publishedAt!)
         self.isVideo = BehaviorRelay<Bool>(value: post.isVideo!)
-        self.wasViewed = BehaviorRelay<Bool>(value: post.wasViewed)
+        self.wasViewed = BehaviorRelay<Bool>(value: post.wasViewed ?? false)
     }
 }
