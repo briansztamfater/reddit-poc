@@ -25,7 +25,6 @@ class PostListViewController: UIViewController {
     private let cellIdentifier = "PostViewCell"
     private let disposeBag = DisposeBag()
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Top in r/CryptoCurrencies"
