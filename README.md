@@ -23,7 +23,7 @@ The structure of the project is as follow:
 
 ## Why use CocoaPods?
 
-The instructions indicates to not use any dependency manager, but instead use URLSession. In order to make an optimal implementation of an MVVM architecture, I took the liberty to integrate some libraries such as RxSwift and RxDatasources. Nervertheless, I indeed made use of the native library URLSession for the Networking layer to attach as much as possible to the instructions if the challenge. The idea behind using `RxSwift` and `RxDatasources` is making `ViewControllers` source code as small as possible, and that setting bindings with the `ViewModel` to be the most of the code in `ViewController` classes.
+The instructions indicates to not use any dependency manager, but instead use URLSession. In order to make an optimal implementation of an MVVM architecture, I took the liberty to integrate some libraries such as RxSwift and RxDatasources. Nervertheless, I indeed made use of the native library URLSession for the Networking layer to attach as much as possible to the instructions of the challenge. The idea behind using `RxSwift` and `RxDatasources` is making `ViewControllers` source code as small as possible, and that setting bindings with the `ViewModel` to be the most of the code in `ViewController` classes.
 
 ## What can be improved
 
