@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-final class RestClient {
+final class RestClient: RestClientProtocol {
     // MARK: - Private Functions
     private func start<T: Any>(target: Target, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping (JSON) -> Any?) {
         var request = URLRequest(url: target.url)

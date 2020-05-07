@@ -8,8 +8,9 @@
 
 import Foundation
 
-final class SubredditService: BaseService<Subreddit> {
-    
+struct SubredditService: SubredditServiceProtocol {
+    @Inject internal var persistence: PersistenceProtocol
+
     public func getSubreddit(title: String) -> Subreddit? {
         return persistence.getCustomBy(attributeName: "title", attributeValue: title)
     }

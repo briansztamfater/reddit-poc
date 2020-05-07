@@ -8,8 +8,7 @@
 
 import Foundation
 
-public class ViewModelBase: NSObject {
+protocol BaseViewModelProtocol {
     
-    weak var navigationDelegate: NavigationDelegate?
-
+    var navigationDelegate: NavigationDelegate? { get set }
 }

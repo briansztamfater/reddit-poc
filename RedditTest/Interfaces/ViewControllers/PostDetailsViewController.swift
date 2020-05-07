@@ -6,7 +6,6 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import Dip
 import RxCocoa
 import RxDataSources
 import RxSwift
@@ -20,7 +19,7 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet weak var lblDate: UILabel!
     @IBOutlet weak var vwHeader: UIView!
 
-    var viewModel: PostDetailsViewModel!
+    @Inject private var viewModel: PostDetailsViewModel
     private let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
@@ -71,5 +70,3 @@ class PostDetailsViewController: UIViewController {
            .disposed(by: disposeBag)
     }
 }
-
-extension PostDetailsViewController: StoryboardInstantiatable { }

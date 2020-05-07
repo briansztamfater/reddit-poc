@@ -6,7 +6,6 @@
 //  Copyright © 2017 Brian Sztamfater. All rights reserved.
 //
 
-import Dip
 import RxCocoa
 import RxDataSources
 import RxSwift
@@ -19,7 +18,7 @@ class PostListViewController: UIViewController {
     let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
     let refreshControl = UIRefreshControl()
 
-    var viewModel: PostListViewModel!
+    @Inject private var viewModel: PostListViewModel
     var dataSource: RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>? = nil
 
     private let cellIdentifier = "PostViewCell"
@@ -148,9 +147,7 @@ class PostListViewController: UIViewController {
     private func setupTableView() {
         // This is necessary since the UITableViewController automatically set his tableview delegate and dataSource to self
         postsTableView.tableFooterView = UIView() // Prevent empty rows
-        postsTableView.rowHeight = UITableViewAutomaticDimension
+        postsTableView.rowHeight = UITableView.automaticDimension
         postsTableView.estimatedRowHeight = 400
     }
 }
-
-extension PostListViewController: StoryboardInstantiatable { }

@@ -9,7 +9,7 @@
 import GRDB
 import SwiftyJSON
 
-protocol Persistence {
+protocol PersistenceProtocol {
     func getAll<T: PersistenceObject>(conditions: [String : String]?, orderBy attributeNames: [String]?) -> [T] // TODO: Allow multiple conditions types and ascending or descending order
     func getBy<T: PersistenceObject>(id: Int64) -> T?
     func getBy<T: PersistenceObject>(id: String) -> T?
@@ -21,7 +21,7 @@ protocol Persistence {
     func getNotificationTag(for entity: String) -> String
 }
 
-extension Persistence {
+extension PersistenceProtocol {
     func getAll<T: PersistenceObject>(conditions: [String : String]? = nil, orderBy attributeNames: [String]? = nil) -> [T] {
         return getAll(conditions: conditions, orderBy: attributeNames)
     }

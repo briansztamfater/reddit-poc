@@ -10,10 +10,13 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-class PostListViewModel: ViewModelBase {
-    
-    private let postService: PostService!
-    private let subredditService: SubredditService!
+class PostListViewModel: BaseViewModelProtocol {
+    @Inject private var postModule: PostModuleType
+    @Inject private var subredditModule: SubredditModuleType
+
+    private lazy var postService: PostServiceProtocol = postModule.component()
+    private lazy var subredditService: SubredditServiceProtocol = subredditModule.component()
+    public weak var navigationDelegate: NavigationDelegate?
 
     let subreddit = "CryptoCurrencies" // We could support multiple subreddits but let's hardcode this one for this test
     let pageSize = 10 // We could make this value configurable but let's hardcode this one for this test
@@ -23,9 +26,7 @@ class PostListViewModel: ViewModelBase {
     var shouldLoad: Bool = false
     var lastItem: String? = nil
 
-    init(postService: PostService, subredditService: SubredditService) {
-        self.postService = postService
-        self.subredditService = subredditService
+    init() {
         let subreddit = subredditService.getSubreddit(title: self.subreddit)
         self.lastItem = subreddit?.after
         let cachedPosts = postService.getAll(conditions: nil, orderBy: ["timestamp"])
@@ -68,7 +69,7 @@ class PostListViewModel: ViewModelBase {
     public func deleteAll() {
         if (posts.value.count > 0) {
             posts.accept([])
-            let posts = postService.getAll()
+            let posts = postService.getAll(conditions: nil, orderBy: nil)
             let subreddit = subredditService.getSubreddit(title: self.subreddit)
             postService.persistence.deleteAll(objects: posts)
             subredditService.persistence.delete(object: subreddit!)
@@ -80,7 +81,7 @@ class PostListViewModel: ViewModelBase {
     public func getTopPosts(forceLoad: Bool = false) {
         if !isLoading.value && (shouldLoad || forceLoad) {
             isLoading.accept(true)
-            postService.getTopPostsFromServer(from: subreddit, after: lastItem, limit: pageSize, onSuccess: { [weak self] posts in
+            postService.getTopPostsFromServer(from: subreddit, before: nil, after: lastItem, limit: pageSize, count: nil, onSuccess: { [weak self] posts in
                 guard let weakSelf = self else {
                     return
                 }
@@ -88,14 +89,14 @@ class PostListViewModel: ViewModelBase {
                 weakSelf.lastItem = posts.1.after
                 weakSelf.shouldLoad = posts.1.after!.count > 0
                 weakSelf.isLoading.accept(false)
-            })
+            }, onError: nil)
         }
     }
     
     public func refreshAll() {
         if !isLoading.value {
             posts.accept([])
-            let posts = postService.getAll()
+            let posts = postService.getAll(conditions: nil, orderBy: nil)
             postService.persistence.deleteAll(objects: posts)
             if let subreddit = subredditService.getSubreddit(title: self.subreddit) {
                 subredditService.persistence.delete(object: subreddit)

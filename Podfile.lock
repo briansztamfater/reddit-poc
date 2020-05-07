@@ -1,6 +1,5 @@
 PODS:
   - Differentiator (4.0.1)
-  - Dip (7.1.1)
   - GRDB.swift (4.14.0):
     - GRDB.swift/standard (= 4.14.0)
   - GRDB.swift/standard (4.14.0)
@@ -26,7 +25,6 @@ PODS:
   - SwiftyJSON (4.3.0)
 
 DEPENDENCIES:
-  - Dip (= 7.1.1)
   - RxCocoa (~> 5)
   - RxDataSources (~> 4.0)
   - RxGRDB
@@ -37,7 +35,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Differentiator
-    - Dip
     - GRDB.swift
     - RxCocoa
     - RxDataSources
@@ -49,7 +46,6 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
-  Dip: 6bebb09d50f88633039ce2c9fe5bc56d387b492f
   GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
@@ -59,6 +55,6 @@ SPEC CHECKSUMS:
   SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: 435549a7abd7af77cc3b7a14b00bc204d21a9f2e
+PODFILE CHECKSUM: 0e88fab1984d525ce47d77386d807a280b8438ca
 
 COCOAPODS: 1.9.1

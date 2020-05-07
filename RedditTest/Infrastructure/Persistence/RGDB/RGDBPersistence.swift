@@ -10,7 +10,7 @@ import Foundation
 import GRDB
 import SwiftyJSON
 
-class RGDBPersistence: Persistence {
+class RGDBPersistence: PersistenceProtocol {
     
     static let NotificationTag = "%@EntityHasChanged"
     
