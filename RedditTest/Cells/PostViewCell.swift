@@ -8,7 +8,6 @@
 
 import UIKit
 import Combine
-import SDWebImage
 
 final class PostViewCell: UITableViewCell {
     
@@ -38,10 +37,14 @@ final class PostViewCell: UITableViewCell {
     let vwNotReadWidth: CGFloat = 10
     let authorLabelLeading: CGFloat = 5
     
+    override func prepareForReuse() {
+        imgThumbnail.image = nil
+    }
+
     public func setupUI() {
         self.vwNotRead.layer.cornerRadius = self.vwNotRead.bounds.size.height / 2
     }
-
+    
     public func configureBindings() {
         guard let viewModel = self.viewModel else {
             return
@@ -67,7 +70,7 @@ final class PostViewCell: UITableViewCell {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.imgThumbnail.sd_setImage(with: imageUrl, placeholderImage: UIImage())
+                weakSelf.imgThumbnail.loadImage(withUrl: imageUrl)
             }
             .store(in: &cancellables)
 

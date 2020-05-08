@@ -8,6 +8,7 @@
 
 import UIKit
 import Combine
+import Foundation
 
 class PostListViewController: UIViewController {
 
@@ -85,7 +86,6 @@ extension PostListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         viewModel.selectPost(at: indexPath.row)
-        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

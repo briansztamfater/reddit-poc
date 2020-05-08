@@ -69,10 +69,10 @@ class PostDetailsViewController: UIViewController {
         
         viewModel.$thumbnailUrl
             .sink { [weak self] imageUrl in
-               guard let weakSelf = self else {
+                guard let weakSelf = self else {
                    return
-               }
-               weakSelf.imgThumbnail.sd_setImage(with: imageUrl, placeholderImage: UIImage())
+                }
+                weakSelf.imgThumbnail.loadImage(withUrl: imageUrl)
             }
             .store(in: &cancellables)
     }

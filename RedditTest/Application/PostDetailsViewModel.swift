@@ -7,6 +7,7 @@
 //
 
 import Combine
+import Foundation
 
 class PostDetailsViewModel: BaseViewModelProtocol {
     @Inject private var postModule: PostModuleType

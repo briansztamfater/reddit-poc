@@ -6,6 +6,8 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
+import Foundation
+
 public class Post: PersistenceObject {
     
     public static let databaseTableName = "posts"

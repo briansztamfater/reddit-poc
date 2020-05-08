@@ -201,9 +201,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="XDm-jq-dUu"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="dipTag" value="PostListVC"/>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="btnDismissAll" destination="49u-oS-NZO" id="eyp-m8-7MO"/>
                         <outlet property="postsTableView" destination="GFx-gZ-J0L" id="Bml-Sv-hNL"/>
@@ -280,9 +277,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="82i-iI-ohT"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="dipTag" value="PostDetailsVC"/>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="imgThumbnail" destination="6QE-ws-1Gf" id="Hip-Ov-Clp"/>
                         <outlet property="lblAuthor" destination="7SM-VX-31L" id="k8x-pf-NBP"/>

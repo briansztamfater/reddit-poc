@@ -6,6 +6,8 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
+import Foundation
+
 class PostListViewModel: BaseViewModelProtocol {
     @Inject private var postModule: PostModuleType
     @Inject private var subredditModule: SubredditModuleType
