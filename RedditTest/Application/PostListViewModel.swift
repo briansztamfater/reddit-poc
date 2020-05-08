@@ -25,9 +25,12 @@ class PostListViewModel: BaseViewModelProtocol {
     init() {
         let subreddit = subredditService.getSubreddit(title: self.subreddit)
         self.lastItem = subreddit?.after
-        let cachedPosts = postService.getAll(conditions: nil, orderBy: ["timestamp"])
-        self.shouldLoad = cachedPosts.count == 0
+        self.shouldLoad = self.lastItem != nil
+        let cachedPosts = postService.getAll(conditions: nil, orderBy: ["rowid"])
         posts = cachedPosts.map { PostViewModel(post: $0) }
+        if subreddit == nil {
+            getTopPosts(forceLoad: true)
+        }
     }
         
     public func selectPost(at index: Int) {
@@ -58,9 +61,10 @@ class PostListViewModel: BaseViewModelProtocol {
         if (posts.count > 0) {
             posts = []
             let posts = postService.getAll(conditions: nil, orderBy: nil)
-            let subreddit = subredditService.getSubreddit(title: self.subreddit)
             postService.persistence.deleteAll(objects: posts)
-            subredditService.persistence.delete(object: subreddit!)
+            if let subreddit = subredditService.getSubreddit(title: self.subreddit) {
+                subredditService.persistence.delete(object: subreddit)
+            }
             self.lastItem = nil
             self.shouldLoad = true
         }
@@ -73,7 +77,7 @@ class PostListViewModel: BaseViewModelProtocol {
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.posts = weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) }
+                weakSelf.posts = weakSelf.postService.getAll(conditions: nil, orderBy: ["rowid"]).map { PostViewModel(post: $0) }
                 weakSelf.lastItem = posts.1.after
                 weakSelf.shouldLoad = posts.1.after!.count > 0
                 weakSelf.isLoading = false

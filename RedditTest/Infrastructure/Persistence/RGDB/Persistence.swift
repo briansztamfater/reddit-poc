@@ -6,9 +6,6 @@
 //  Copyright © 2017 Brian Sztamfater. All rights reserved.
 //
 
-import GRDB
-import SwiftyJSON
-
 protocol PersistenceProtocol {
     func getAll<T: PersistenceObject>(conditions: [String : String]?, orderBy attributeNames: [String]?) -> [T] // TODO: Allow multiple conditions types and ascending or descending order
     func getBy<T: PersistenceObject>(id: Int64) -> T?

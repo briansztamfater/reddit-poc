@@ -1,39 +1,22 @@
 PODS:
-  - GRDB.swift (4.14.0):
-    - GRDB.swift/standard (= 4.14.0)
-  - GRDB.swift/standard (4.14.0)
-  - RxGRDB (0.18.0):
-    - RxGRDB/default (= 0.18.0)
-    - RxSwift (~> 5.0)
-  - RxGRDB/default (0.18.0):
-    - GRDB.swift (~> 4.1)
-    - RxSwift (~> 5.0)
-  - RxSwift (5.1.1)
   - SDWebImage (5.7.3):
     - SDWebImage/Core (= 5.7.3)
   - SDWebImage/Core (5.7.3)
   - SwiftyJSON (4.3.0)
 
 DEPENDENCIES:
-  - RxGRDB
   - SDWebImage (= 5.7.3)
   - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
   trunk:
-    - GRDB.swift
-    - RxGRDB
-    - RxSwift
     - SDWebImage
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  GRDB.swift: 8cc3ab7c8b8b4ac1761deb8dca4b51c1c9d429f8
-  RxGRDB: 41dfd8f987aad7a7bdd7c420319d3eb23ee383f3
-  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SDWebImage: 97351f6582ceca541ea294ba66a1fcb342a331c2
   SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
 
-PODFILE CHECKSUM: 2943fbf495943ec43fc6b46b54d94850b38d2c92
+PODFILE CHECKSUM: 1198662fe84a091c49dd26c29b4a2c0c140034db
 
 COCOAPODS: 1.9.1

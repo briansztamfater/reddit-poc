@@ -28,7 +28,6 @@ class PostListViewController: UIViewController {
         setupUI()
         setupTableView()
         configureBindings()
-        viewModel.getTopPosts()
     }
     
     private func setupUI() {
@@ -41,19 +40,6 @@ class PostListViewController: UIViewController {
     }
     
     private func configureBindings() {
-        viewModel.$posts
-            .sink { [weak self] posts in
-                guard let weakSelf = self else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    if posts.count > weakSelf.postsTableView.numberOfRows(inSection: 0) {
-                        weakSelf.postsTableView.reloadData()
-                    }
-                }
-            }
-            .store(in: &cancellables)
-
         viewModel.$isLoading
             .sink { [weak self] isLoading in
                 guard let weakSelf = self else {
@@ -68,6 +54,9 @@ class PostListViewController: UIViewController {
                         weakSelf.activityIndicator.stopAnimating()
                         weakSelf.refreshControl.endRefreshing()
                     }
+                }
+                DispatchQueue.main.async {
+                    weakSelf.postsTableView.reloadData()
                 }
             }
             .store(in: &cancellables)
