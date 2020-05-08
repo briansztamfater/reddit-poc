@@ -7,7 +7,6 @@ target 'RedditTest' do
 
   # Pods for RedditTest
 
-  pod 'SwiftyJSON', '~> 4.0'
   pod 'SDWebImage', '5.7.3'
 
 end

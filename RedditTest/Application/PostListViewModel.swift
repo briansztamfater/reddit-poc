@@ -79,7 +79,7 @@ class PostListViewModel: BaseViewModelProtocol {
                 }
                 weakSelf.posts = weakSelf.postService.getAll(conditions: nil, orderBy: ["rowid"]).map { PostViewModel(post: $0) }
                 weakSelf.lastItem = posts.1.after
-                weakSelf.shouldLoad = posts.1.after!.count > 0
+                weakSelf.shouldLoad = posts.1.after != nil && posts.1.after!.count > 0
                 weakSelf.isLoading = false
             }, onError: nil)
         }

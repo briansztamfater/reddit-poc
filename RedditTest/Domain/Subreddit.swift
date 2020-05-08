@@ -6,9 +6,6 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import Foundation
-import SwiftyJSON
-
 public class Subreddit: PersistenceObject {
     
     public static let databaseTableName = "subreddit"

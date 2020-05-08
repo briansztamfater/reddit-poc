@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 final class RestClient: RestClientProtocol {
     // MARK: - Private Functions
-    private func start<T: Any>(target: Target, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping (JSON) -> Any?) {
+    private func start<T>(target: Target, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping ([String : Any]) -> Any?) {
         var request = URLRequest(url: target.url)
         request.httpMethod = target.method
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -30,7 +29,7 @@ final class RestClient: RestClientProtocol {
         let task = URLSession.shared.dataTask(with: request) { data, response, responseError in
             guard let responseError = responseError else {
                 do {
-                    let json = try JSON(data: data!, options: JSONSerialization.ReadingOptions.allowFragments)
+                    let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [String : Any]
                     let sanitizedJson = try target.errorSanitizer(json)
                     let parsedObject = processResponse(sanitizedJson) as! T
                     completion( DataResult { return parsedObject } )
@@ -45,11 +44,11 @@ final class RestClient: RestClientProtocol {
     }
 
     // MARK: - Internal Functions
-    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping (JSON) -> T?) {
+    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping ([String : Any]) -> T?) {
         self.start(target: target, parameters: parameters, headers: nil, completion: completion, processResponse: processResponse)
     }
     
-    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<[T]>) -> Void, processResponse: @escaping (JSON) -> [T]?) {
+    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<[T]>) -> Void, processResponse: @escaping ([String : Any]) -> [T]?) {
         self.start(target: target, parameters: parameters, headers: nil, completion: completion, processResponse: processResponse)
     }
 }

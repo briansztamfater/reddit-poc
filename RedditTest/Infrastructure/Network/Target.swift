@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 protocol Target {
     var baseUrl: URL { get }
@@ -15,5 +14,5 @@ protocol Target {
     var commonHeaders: [String : String]? { get }
     var method: String { get }
     var url: URL { get }
-    var errorSanitizer: (JSON) throws -> JSON { get }
+    var errorSanitizer: ([String : Any]) throws -> [String : Any] { get }
 }

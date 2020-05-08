@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 enum RedditTarget: Target {
     
@@ -50,7 +49,7 @@ enum RedditTarget: Target {
         }
     }
     
-    var errorSanitizer: (JSON) throws -> JSON {
+    var errorSanitizer: ([String : Any]) throws -> [String : Any] {
         return { json in return json }
     }
 }

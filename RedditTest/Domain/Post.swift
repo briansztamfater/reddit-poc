@@ -6,9 +6,6 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import Foundation
-import SwiftyJSON
-
 public class Post: PersistenceObject {
     
     public static let databaseTableName = "posts"
@@ -27,19 +24,19 @@ public class Post: PersistenceObject {
 
     required init() {}
     
-    init(_ json: JSON) {
+    init(_ json: [String: Any]) {
         updateWithJSON(json)
     }
     
-    func updateWithJSON(_ json: JSON) {
-        self.id = json["id"].stringValue
-        self.title = json["title"].stringValue
-        self.subreddit = json["subreddit"].stringValue
-        self.author = json["author"].stringValue
-        self.thumbnailUrl = URL(string: json["thumbnail"].stringValue)!
-        self.numComments = json["num_comments"].intValue
-        self.publishedAt = Date(timeIntervalSince1970: json["created_utc"].doubleValue)
-        self.isVideo = json["is_video"].boolValue
+    func updateWithJSON(_ json: [String: Any]) {
+        self.id = json["id"] as? String
+        self.title = json["title"] as? String
+        self.subreddit = json["subreddit"] as? String
+        self.author = json["author"] as? String
+        self.thumbnailUrl = URL(string: json["thumbnail"] as! String)!
+        self.numComments = json["num_comments"] as? Int
+        self.publishedAt = Date(timeIntervalSince1970: json["created_utc"] as! Double)
+        self.isVideo = json["is_video"] as? Bool
         self.timestamp = Double(Date().timeIntervalSince1970)
     }
     

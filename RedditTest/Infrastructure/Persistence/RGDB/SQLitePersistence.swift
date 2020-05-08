@@ -8,7 +8,6 @@
 
 import Foundation
 import SQLite3
-import SwiftyJSON
 
 class SQLitePersistence: PersistenceProtocol {
     
