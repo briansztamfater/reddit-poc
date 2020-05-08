@@ -76,7 +76,7 @@ final class PostViewCell: UITableViewCell {
 
         viewModel.$numComments
             .map { "\($0) comments" }
-            .assign(to: \.text, on: lblAuthor)
+            .assign(to: \.text, on: lblComments)
             .store(in: &cancellables)
 
         viewModel.$wasViewed
