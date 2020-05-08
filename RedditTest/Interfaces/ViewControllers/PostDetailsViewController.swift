@@ -6,10 +6,8 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import RxCocoa
-import RxDataSources
-import RxSwift
 import UIKit
+import Combine
 
 class PostDetailsViewController: UIViewController {
 
@@ -20,7 +18,8 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet weak var vwHeader: UIView!
 
     @Inject private var viewModel: PostDetailsViewModel
-    private let disposeBag = DisposeBag()
+
+    private var cancellables: Set<AnyCancellable> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,44 +28,52 @@ class PostDetailsViewController: UIViewController {
     }
 
     private func configureBindings() {
-        viewModel.title
-           .asObservable()
-           .bind(to: lblTitle.rx.text)
-           .disposed(by: disposeBag)
+        viewModel.$title
+            .assign(to: \.text, on: lblTitle)
+            .store(in: &cancellables)
 
-        viewModel.title
-            .asObservable()
-            .bind { [weak self] title in
+        viewModel.$title
+            .sink { [weak self] title in
                 guard let weakSelf = self else {
                     return
                 }
                 weakSelf.title = title
                 // Hide UI elements if no post is provided
-                weakSelf.lblTitle.isHidden = title.count == 0
-                weakSelf.vwHeader.isHidden = title.count == 0
-                weakSelf.imgThumbnail.isHidden = title.count == 0
+                weakSelf.lblTitle.isHidden = title!.count == 0
+                weakSelf.vwHeader.isHidden = title!.count == 0
+                weakSelf.imgThumbnail.isHidden = title!.count == 0
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
 
-       viewModel.author
-           .asObservable()
-           .bind(to: lblAuthor.rx.text)
-           .disposed(by: disposeBag)
+        viewModel.$author
+            .assign(to: \.text, on: lblAuthor)
+            .store(in: &cancellables)
 
-       viewModel.publishedAt
-           .asObservable()
-           .map { "(\($0.localTime().timeAgo()))" }
-           .bind(to: lblDate.rx.text)
-           .disposed(by: disposeBag)
-
-       viewModel.thumbnailUrl
-           .asObservable()
-           .bind { [weak self] imageUrl in
+        viewModel.$publishedAt
+            .map { "(\($0.localTime().timeAgo()))" }
+            .assign(to: \.text, on: lblDate)
+            .store(in: &cancellables)
+        
+        viewModel.$title
+            .sink { [weak self] title in
+                guard let weakSelf = self else {
+                    return
+                }
+                weakSelf.title = title
+                // Hide UI elements if no post is provided
+                weakSelf.lblTitle.isHidden = title!.count == 0
+                weakSelf.vwHeader.isHidden = title!.count == 0
+                weakSelf.imgThumbnail.isHidden = title!.count == 0
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$thumbnailUrl
+            .sink { [weak self] imageUrl in
                guard let weakSelf = self else {
                    return
                }
                weakSelf.imgThumbnail.sd_setImage(with: imageUrl, placeholderImage: UIImage())
-           }
-           .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 }

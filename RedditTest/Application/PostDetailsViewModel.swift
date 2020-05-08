@@ -6,9 +6,7 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import RxSwift
-import RxCocoa
-import RxDataSources
+import Combine
 
 class PostDetailsViewModel: BaseViewModelProtocol {
     @Inject private var postModule: PostModuleType
@@ -16,17 +14,17 @@ class PostDetailsViewModel: BaseViewModelProtocol {
     private lazy var postService: PostServiceProtocol = postModule.component()
     public weak var navigationDelegate: NavigationDelegate?
 
-    let title = BehaviorRelay<String>(value: "")
-    let thumbnailUrl = BehaviorRelay<URL>(value: URL(string: "http://")!)
-    let author = BehaviorRelay<String>(value: "")
-    let publishedAt = BehaviorRelay<Date>(value: Date())
+    @Published var title: String? = ""
+    @Published var thumbnailUrl = URL(string: "http://")!
+    @Published var author: String? = ""
+    @Published var publishedAt = Date()
 
     init() {
         if let currentPostId = postService.currentPostId, let post = postService.getEntityBy(id: currentPostId) {
-            title.accept(post.title!)
-            thumbnailUrl.accept(post.thumbnailUrl!)
-            author.accept(post.author!)
-            publishedAt.accept(post.publishedAt!)
+            title = post.title!
+            thumbnailUrl = post.thumbnailUrl!
+            author = post.author!
+            publishedAt = post.publishedAt!
         }
     }
 }

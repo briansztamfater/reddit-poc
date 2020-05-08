@@ -6,10 +6,6 @@
 //  Copyright © 2020 Brian Sztamfater. All rights reserved.
 //
 
-import RxSwift
-import RxCocoa
-import RxDataSources
-
 class PostListViewModel: BaseViewModelProtocol {
     @Inject private var postModule: PostModuleType
     @Inject private var subredditModule: SubredditModuleType
@@ -20,8 +16,8 @@ class PostListViewModel: BaseViewModelProtocol {
 
     let subreddit = "CryptoCurrencies" // We could support multiple subreddits but let's hardcode this one for this test
     let pageSize = 10 // We could make this value configurable but let's hardcode this one for this test
-    let posts = BehaviorRelay<[AnimatableSectionModel<String, PostViewModel>]>(value: [])
-    let isLoading = BehaviorRelay<Bool>(value: false)
+    @Published var posts: [PostViewModel] = []
+    @Published var isLoading = false
     
     var shouldLoad: Bool = false
     var lastItem: String? = nil
@@ -31,15 +27,13 @@ class PostListViewModel: BaseViewModelProtocol {
         self.lastItem = subreddit?.after
         let cachedPosts = postService.getAll(conditions: nil, orderBy: ["timestamp"])
         self.shouldLoad = cachedPosts.count == 0
-        posts.accept([AnimatableSectionModel(model: "", items: cachedPosts.map { PostViewModel(post: $0) })])
+        posts = cachedPosts.map { PostViewModel(post: $0) }
     }
         
     public func selectPost(at index: Int) {
-        let sections = posts.value
-        let currentSection = sections[0]
-        let postViewModel = currentSection.items[index]
-        postViewModel.wasViewed.accept(true)
-        let postId = postViewModel.identifier.value
+        let postViewModel = posts[index]
+        postViewModel.wasViewed = true
+        let postId = postViewModel.identifier
         let post = postService.getEntityBy(id: postId)!
         post.wasViewed = true
         postService.persistence.save(object: post)
@@ -48,27 +42,21 @@ class PostListViewModel: BaseViewModelProtocol {
     }
     
     public func deletePost(at index: Int) {
-        var sections = posts.value
-        var currentSection = sections[0]
-        let postViewModel = currentSection.items[index]
-        currentSection.items.remove(at: index)
-        sections[0] = currentSection
-        posts.accept(sections)
-        let postId = postViewModel.identifier.value
+        let postViewModel = posts[index]
+        posts.remove(at: index)
+        let postId = postViewModel.identifier
         let post = postService.getEntityBy(id: postId)!
         postService.persistence.delete(object: post)
     }
     
     public func deletePost(from viewModel: PostViewModel) {
-        let sections = posts.value
-        let currentSection = sections[0]
-        let postIndex = currentSection.items.firstIndex(of: viewModel)!
+        let postIndex = posts.firstIndex{ $0.identifier == viewModel.identifier }!
         deletePost(at: postIndex)
     }
     
     public func deleteAll() {
-        if (posts.value.count > 0) {
-            posts.accept([])
+        if (posts.count > 0) {
+            posts = []
             let posts = postService.getAll(conditions: nil, orderBy: nil)
             let subreddit = subredditService.getSubreddit(title: self.subreddit)
             postService.persistence.deleteAll(objects: posts)
@@ -79,23 +67,23 @@ class PostListViewModel: BaseViewModelProtocol {
     }
 
     public func getTopPosts(forceLoad: Bool = false) {
-        if !isLoading.value && (shouldLoad || forceLoad) {
-            isLoading.accept(true)
+        if !isLoading && (shouldLoad || forceLoad) {
+            isLoading = true
             postService.getTopPostsFromServer(from: subreddit, before: nil, after: lastItem, limit: pageSize, count: nil, onSuccess: { [weak self] posts in
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.posts.accept([AnimatableSectionModel(model: "", items: weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) })])
+                weakSelf.posts = weakSelf.postService.getAll(conditions: nil, orderBy: ["timestamp"]).map { PostViewModel(post: $0) }
                 weakSelf.lastItem = posts.1.after
                 weakSelf.shouldLoad = posts.1.after!.count > 0
-                weakSelf.isLoading.accept(false)
+                weakSelf.isLoading = false
             }, onError: nil)
         }
     }
     
     public func refreshAll() {
-        if !isLoading.value {
-            posts.accept([])
+        if !isLoading {
+            posts = []
             let posts = postService.getAll(conditions: nil, orderBy: nil)
             postService.persistence.deleteAll(objects: posts)
             if let subreddit = subredditService.getSubreddit(title: self.subreddit) {

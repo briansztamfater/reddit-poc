@@ -7,9 +7,6 @@ target 'RedditTest' do
 
   # Pods for RedditTest
 
-  pod 'RxSwift', '~> 5'
-  pod 'RxCocoa', '~> 5'
-  pod 'RxDataSources', '~> 4.0'
   pod 'RxGRDB'
   pod 'SwiftyJSON', '~> 4.0'
   pod 'SDWebImage', '5.7.3'

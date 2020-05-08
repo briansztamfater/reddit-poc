@@ -6,10 +6,8 @@
 //  Copyright © 2017 Brian Sztamfater. All rights reserved.
 //
 
-import RxCocoa
-import RxDataSources
-import RxSwift
 import UIKit
+import Combine
 
 class PostListViewController: UIViewController {
 
@@ -19,10 +17,9 @@ class PostListViewController: UIViewController {
     let refreshControl = UIRefreshControl()
 
     @Inject private var viewModel: PostListViewModel
-    var dataSource: RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>? = nil
 
     private let cellIdentifier = "PostViewCell"
-    private let disposeBag = DisposeBag()
+    private var cancellables: Set<AnyCancellable> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,40 +36,26 @@ class PostListViewController: UIViewController {
         self.navigationItem.setLeftBarButton(barButton, animated: true)
         
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action:  #selector(refreshAll), for: .valueChanged)
         self.postsTableView.addSubview(refreshControl)
-        
-        dataSource = RxTableViewSectionedAnimatedDataSource<AnimatableSectionModel<String, PostViewModel>>(
-            configureCell: { (_, tv, indexPath, viewModel) in
-                let cell = tv.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
-                cell.viewModel = viewModel
-                cell.setupUI()
-                cell.btnDismiss.rx
-                    .tap
-                    .asDriver()
-                    .drive(onNext: { [weak self] in
-                        guard let weakSelf = self else {
-                            return
-                        }
-                        weakSelf.viewModel.deletePost(from: viewModel)
-                    })
-                    .disposed(by: cell.disposeBag)
-                return cell
-        })
-        dataSource!.canEditRowAtIndexPath = { dataSource, indexPath  in
-          return true
-        }
     }
     
     private func configureBindings() {
-        viewModel.posts
-            .asObservable()
-            .distinctUntilChanged()
-            .bind(to: postsTableView.rx.items(dataSource: dataSource!))
-            .disposed(by: disposeBag)
-        
-        viewModel.isLoading
-            .asObservable()
-            .subscribe(onNext: { [weak self] isLoading in
+        viewModel.$posts
+            .sink { [weak self] posts in
+                guard let weakSelf = self else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    if posts.count > weakSelf.postsTableView.numberOfRows(inSection: 0) {
+                        weakSelf.postsTableView.reloadData()
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
+        viewModel.$isLoading
+            .sink { [weak self] isLoading in
                 guard let weakSelf = self else {
                     return
                 }
@@ -86,62 +69,8 @@ class PostListViewController: UIViewController {
                         weakSelf.refreshControl.endRefreshing()
                     }
                 }
-            })
-            .disposed(by: disposeBag)
-
-        postsTableView.rx.itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.postsTableView?.deselectRow(at: indexPath, animated: true)
-                weakSelf.viewModel.selectPost(at: indexPath.row)
-                weakSelf.postsTableView?.reloadData()
-            })
-            .disposed(by: disposeBag)
-        
-        postsTableView.rx
-            .itemDeleted
-            .subscribe(onNext: { [weak self] indexPath in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.viewModel.deletePost(at: indexPath.row)
-            })
-            .disposed(by: disposeBag)
-        
-        postsTableView.rx.didEndDragging
-            .subscribe(onNext: { [weak self] _ in
-                guard let weakSelf = self else {
-                    return
-                }
-                let currentOffset = weakSelf.postsTableView.contentOffset.y
-                let maximumOffset = weakSelf.postsTableView.contentSize.height - weakSelf.postsTableView.frame.size.height
-                if maximumOffset - currentOffset <= 10.0 {
-                    weakSelf.viewModel.getTopPosts(forceLoad: true)
-                }
-
-            })
-            .disposed(by: disposeBag)
-
-        refreshControl.rx.controlEvent(.valueChanged)
-            .subscribe(onNext: { [weak self] in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.viewModel.refreshAll()
-            })
-            .disposed(by: disposeBag)
-
-        btnDismissAll.rx.tap
-            .asDriver()
-            .drive(onNext: { [weak self] in
-                guard let weakSelf = self else {
-                    return
-                }
-                weakSelf.viewModel.deleteAll()
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
     
     private func setupTableView() {
@@ -149,5 +78,65 @@ class PostListViewController: UIViewController {
         postsTableView.tableFooterView = UIView() // Prevent empty rows
         postsTableView.rowHeight = UITableView.automaticDimension
         postsTableView.estimatedRowHeight = 400
+    }
+    
+    @objc private func refreshAll() {
+        viewModel.refreshAll()
+    }
+    
+    @IBAction func dismissAll() {
+        viewModel.deleteAll()
+        let count = postsTableView.numberOfRows(inSection: 0);
+        let indexPaths = (0..<count).map { IndexPath(row: $0, section: 0) }
+        postsTableView.deleteRows(at: indexPaths, with: .fade)
+    }
+}
+
+extension PostListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        viewModel.selectPost(at: indexPath.row)
+        tableView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            viewModel.deletePost(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let currentOffset = postsTableView.contentOffset.y
+        let maximumOffset = postsTableView.contentSize.height - postsTableView.frame.size.height
+        if maximumOffset - currentOffset <= 10.0 {
+            viewModel.getTopPosts(forceLoad: true)
+        }
+    }
+}
+
+extension PostListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.posts.count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let postViewModel = viewModel.posts[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PostViewCell", for: indexPath) as! PostViewCell
+        cell.viewModel = postViewModel
+        cell.setupUI()
+        cell.dismissButtonBlock = { [weak self] in
+            guard let weakSelf = self else {
+                return
+            }
+            weakSelf.viewModel.deletePost(from: postViewModel)
+            weakSelf.postsTableView.deleteRows(at: [weakSelf.postsTableView.indexPath(for: cell)!], with: UITableView.RowAnimation.automatic)
+        }
+        return cell
     }
 }

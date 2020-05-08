@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import RxSwift
-import RxCocoa
+import Combine
 import SDWebImage
 
 final class PostViewCell: UITableViewCell {
@@ -25,15 +24,17 @@ final class PostViewCell: UITableViewCell {
     @IBOutlet weak var btnDismiss: UIButton!
     @IBOutlet weak var notReadViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var authorLabelLeadingConstraint: NSLayoutConstraint!
+    var dismissButtonBlock : (() -> ())?
 
     var viewModel: PostViewModel? {
         didSet {
-            self.disposeBag = DisposeBag()
+            self.cancellables.forEach{ $0.cancel() }
+            self.cancellables = []
             configureBindings()
         }
     }
-    var disposeBag = DisposeBag()
-    
+    private var cancellables: Set<AnyCancellable> = []
+
     let vwNotReadWidth: CGFloat = 10
     let authorLabelLeading: CGFloat = 5
     
@@ -46,41 +47,37 @@ final class PostViewCell: UITableViewCell {
             return
         }
         
-        viewModel.title
-            .asObservable()
-            .bind(to: lblTitle.rx.text)
-            .disposed(by: disposeBag)
+        viewModel.$title
+            .map { "\($0)" }
+            .assign(to: \.text, on: lblTitle)
+            .store(in: &cancellables)
 
-        viewModel.author
-            .asObservable()
-            .bind(to: lblAuthor.rx.text)
-            .disposed(by: disposeBag)
+        viewModel.$author
+            .map { "\($0)" }
+            .assign(to: \.text, on: lblAuthor)
+            .store(in: &cancellables)
 
-        viewModel.publishedAt
-            .asObservable()
+        viewModel.$publishedAt
             .map { "(\($0.localTime().timeAgo()))" }
-            .bind(to: lblDate.rx.text)
-            .disposed(by: disposeBag)
+            .assign(to: \.text, on: lblDate)
+            .store(in: &cancellables)
 
-        viewModel.thumbnailUrl
-            .asObservable()
-            .bind { [weak self] imageUrl in
+        viewModel.$thumbnailUrl
+            .sink { [weak self] imageUrl in
                 guard let weakSelf = self else {
                     return
                 }
                 weakSelf.imgThumbnail.sd_setImage(with: imageUrl, placeholderImage: UIImage())
             }
-            .disposed(by: disposeBag)
-        
-        viewModel.numComments
-            .asObservable()
+            .store(in: &cancellables)
+
+        viewModel.$numComments
             .map { "\($0) comments" }
-            .bind(to: lblComments.rx.text)
-            .disposed(by: disposeBag)
-        
-        viewModel.wasViewed
-            .asObservable()
-            .bind { [weak self] wasViewed in
+            .assign(to: \.text, on: lblAuthor)
+            .store(in: &cancellables)
+
+        viewModel.$wasViewed
+            .sink { [weak self] wasViewed in
                 guard let weakSelf = self else {
                     return
                 }
@@ -88,6 +85,10 @@ final class PostViewCell: UITableViewCell {
                 weakSelf.notReadViewWidthConstraint.constant = wasViewed ? 0 : weakSelf.vwNotReadWidth
                 weakSelf.authorLabelLeadingConstraint.constant = wasViewed ? 0 : weakSelf.authorLabelLeading
             }
-            .disposed(by: disposeBag)
+            .store(in: &cancellables)
+    }
+    
+    @IBAction func dismissPost(){
+      dismissButtonBlock?()
     }
 }
