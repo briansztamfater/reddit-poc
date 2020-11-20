@@ -65,7 +65,7 @@ final class PostViewCell: UITableViewCell {
             .assign(to: \.text, on: lblDate)
             .store(in: &cancellables)
 
-        viewModel.$thumbnailUrl
+        viewModel.$thumbnail
             .sink { [weak self] imageUrl in
                 guard let weakSelf = self else {
                     return

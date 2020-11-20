@@ -28,9 +28,9 @@ class PostListViewModel: BaseViewModelProtocol {
         let subreddit = subredditService.getSubreddit(title: self.subreddit)
         self.lastItem = subreddit?.after
         self.shouldLoad = self.lastItem != nil
-        let cachedPosts = postService.getAll(conditions: nil, orderBy: ["rowid"])
+        let cachedPosts = postService.getAll(conditions: nil, orderBy: ["publishedAt"])
         posts = cachedPosts.map { PostViewModel(post: $0) }
-        if subreddit == nil {
+        if posts.count == 0 {
             getTopPosts(forceLoad: true)
         }
     }
@@ -39,7 +39,7 @@ class PostListViewModel: BaseViewModelProtocol {
         let postViewModel = posts[index]
         postViewModel.wasViewed = true
         let postId = postViewModel.identifier
-        let post = postService.getEntityBy(id: postId)!
+        var post = postService.getEntityBy(id: postId)!
         post.wasViewed = true
         postService.persistence.save(object: post)
         postService.currentPostId = postId
@@ -73,15 +73,21 @@ class PostListViewModel: BaseViewModelProtocol {
     }
 
     public func getTopPosts(forceLoad: Bool = false) {
+        guard (lastItem == nil && posts.count == 0) || (lastItem != nil && posts.count > 0) else {
+            return
+        }
         if !isLoading && (shouldLoad || forceLoad) {
             isLoading = true
-            postService.getTopPostsFromServer(from: subreddit, before: nil, after: lastItem, limit: pageSize, count: nil, onSuccess: { [weak self] posts in
+            postService.getTopPostsFromServer(from: subreddit, before: nil, after: lastItem, limit: pageSize, count: nil, onSuccess: { [weak self] result in
                 guard let weakSelf = self else {
                     return
                 }
-                weakSelf.posts = weakSelf.postService.getAll(conditions: nil, orderBy: ["rowid"]).map { PostViewModel(post: $0) }
-                weakSelf.lastItem = posts.1.after
-                weakSelf.shouldLoad = posts.1.after != nil && posts.1.after!.count > 0
+                let sortedPosts = result.0.sorted {
+                    $0.publishedAt! > $1.publishedAt!
+                }
+                weakSelf.posts.append(contentsOf: sortedPosts.map{ PostViewModel(post: $0) })
+                weakSelf.lastItem = result.1.after
+                weakSelf.shouldLoad = result.1.after != nil && result.1.after!.count > 0
                 weakSelf.isLoading = false
             }, onError: nil)
         }

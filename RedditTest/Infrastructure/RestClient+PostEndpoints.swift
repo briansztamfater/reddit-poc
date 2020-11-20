@@ -11,11 +11,16 @@ import Foundation
 extension RestClient {
     
     func getTop(from subreddit: String, before: String? = nil, after: String? = nil, limit: Int? = nil, count: Int? = nil, completion: @escaping (DataResult<([Post], Subreddit)>) -> Void) {
-        self.execute(target: RedditTarget.GetTop(subreddit: subreddit, before: before, after: after, limit: limit, count: count), completion: completion) { json in
-            let data = json["data"] as! [String: Any]
-            let children = data["children"] as! Array<[String: Any]>
-            let subreddit = Subreddit(title: subreddit, after: data["after"] as? String)
-            return ( children.map { Post($0["data"] as! [String: Any]) }, subreddit )
+        self.execute(target: RedditTarget.GetTop(subreddit: subreddit, before: before, after: after, limit: limit, count: count), completion: completion) { data in
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+            guard let listingResponse = try? decoder.decode(ListingResponse<Post>.self, from: data) else {
+              return nil
+            }
+
+            let subredditObject = Subreddit(title: subreddit, after: listingResponse.data.after)
+            return ( listingResponse.data.children.map{ $0.data }, subredditObject )
         }
     }
 }

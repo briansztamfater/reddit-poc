@@ -7,70 +7,75 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
-public class Post: PersistenceObject {
+public struct Post: Codable {
     
-    public static let databaseTableName = "posts"
-    public static let databaseIdentifierColumn = "id"
-
     var id: String?
     var subreddit: String?
     var author: String?
     var title: String?
-    var thumbnailUrl: URL?
-    var numComments: Int?
+    var thumbnail: URL?
+    var numComments: Int32
     var publishedAt: Date?
-    var isVideo: Bool?
+    var isVideo: Bool
     var wasViewed: Bool?
-    var timestamp: Double?
+    var timestamp: Date?
+    
+    init(id: String, subreddit: String?, author: String, title: String, thumbnail: URL, numComments: Int32, publishedAt: Date?, isVideo: Bool, wasViewed: Bool?, timestamp: Date?) {
+        self.id = id
+        self.subreddit = subreddit
+        self.author = author
+        self.title = title
+        self.thumbnail = thumbnail
+        self.numComments = numComments
+        self.publishedAt = publishedAt
+        self.isVideo = isVideo
+        self.wasViewed = wasViewed
+        self.timestamp = timestamp
+    }
+//
+    private enum CodingKeys: String, CodingKey {
+        case id, author, title, subreddit, thumbnail, numComments, isVideo, wasViewed, timestamp
+        case publishedAt = "createdUtc"
+    }
+//
+//    private enum AdditionalCodingKeys: String, CodingKey {
+//        case subreddit, wasViewed, timestamp
+//    }
+}
 
-    required init() {}
-    
-    init(_ json: [String: Any]) {
-        updateWithJSON(json)
+extension Post: Migratable {
+    static func build(from entity: PostCoreDataEntity) -> Post? {
+        guard let id = entity.id, let author = entity.author, let title = entity.title else {
+            return nil
+        }
+//        guard let postSubreddit = entity.subreddit, let subreddit = Subreddit.build(from: postSubreddit) else{
+//            return nil
+//        }
+        let thumbnail = entity.thumbnail
+        let numComments = entity.numComments
+        let isVideo = entity.isVideo
+        let wasViewed = entity.wasViewed
+        let publishedAt = entity.publishedAt
+        let timestamp = entity.timestamp
+        let subreddit = entity.subreddit
+        return Post(id: id, subreddit: subreddit, author: author, title: title, thumbnail: (thumbnail ?? URL(string: "http://"))!, numComments: numComments, publishedAt: publishedAt, isVideo: isVideo, wasViewed: wasViewed, timestamp: timestamp)
     }
-    
-    func updateWithJSON(_ json: [String: Any]) {
-        self.id = json["id"] as? String
-        self.title = json["title"] as? String
-        self.subreddit = json["subreddit"] as? String
-        self.author = json["author"] as? String
-        self.thumbnailUrl = URL(string: json["thumbnail"] as! String)!
-        self.numComments = json["num_comments"] as? Int
-        self.publishedAt = Date(timeIntervalSince1970: json["created_utc"] as! Double)
-        self.isVideo = json["is_video"] as? Bool
-        self.timestamp = Double(Date().timeIntervalSince1970)
-    }
-    
-    func updateWithDictionary(_ dictionary: Dictionary<String, String?>) {
-        id = dictionary["id"] ?? nil
-        title = dictionary["title"] ?? nil
-        subreddit = dictionary["subreddit"] ?? nil
-        author = dictionary["author"] ?? nil
-        thumbnailUrl = URL(string: (dictionary["thumbnailUrl"] ?? "https://")!)!
-        numComments = dictionary["numComments"]! != nil ? (dictionary["numComments"]!! as NSString).integerValue : 0
-        publishedAt = dictionary["publishedAt"]! != nil ? Date(timeIntervalSince1970: (dictionary["publishedAt"]!! as NSString).doubleValue) : nil
-        isVideo = dictionary["isVideo"]! != nil ? (dictionary["isVideo"]!! as NSString).boolValue : nil
-        wasViewed = dictionary["wasViewed"] != nil && dictionary["wasViewed"]! != nil ? (dictionary["wasViewed"]!! as NSString).boolValue : nil
-        timestamp = dictionary["timestamp"]! != nil ? (dictionary["numComments"]!! as NSString).doubleValue : nil
-    }
-    
-    func dbRepresentationDict() -> Dictionary<String, Any?> {
-        return [
-            "id": id,
-            "title": title,
-            "subreddit": subreddit,
-            "author": author,
-            "thumbnailUrl": thumbnailUrl!.absoluteString,
-            "numComments": numComments,
-            "publishedAt": publishedAt!.timeIntervalSince1970,
-            "isVideo": isVideo,
-            "wasViewed": wasViewed,
-            "timestamp": timestamp
-        ]
-    }
-    
-    func databaseIdentifier() -> Any {
-        return id as Any
+
+    func export(to context: NSManagedObjectContext) throws -> PostCoreDataEntity {
+        let entity = PostCoreDataEntity(context: context)
+        entity.id = id
+        entity.subreddit = subreddit
+        entity.author = author
+        entity.title = title
+        entity.thumbnail = thumbnail
+        entity.numComments = numComments
+        entity.publishedAt = publishedAt
+        entity.isVideo = isVideo
+        entity.wasViewed = wasViewed ?? false
+        entity.timestamp = timestamp
+        return entity
     }
 }

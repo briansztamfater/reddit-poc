@@ -10,7 +10,7 @@ import Foundation
 
 final class RestClient: RestClientProtocol {
     // MARK: - Private Functions
-    private func start<T>(target: Target, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping ([String : Any]) -> Any?) {
+    private func start<T>(target: Target, parameters: [String : Any]? = nil, headers: [String : String]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping (Data) -> Any?) {
         var request = URLRequest(url: target.url)
         request.httpMethod = target.method
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -30,8 +30,8 @@ final class RestClient: RestClientProtocol {
             guard let responseError = responseError else {
                 do {
                     let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! [String : Any]
-                    let sanitizedJson = try target.errorSanitizer(json)
-                    let parsedObject = processResponse(sanitizedJson) as! T
+                    _ = try target.searchError(json)
+                    let parsedObject = processResponse(data!) as! T
                     completion( DataResult { return parsedObject } )
                 } catch let error as NSError {
                     completion( DataResult { throw error })
@@ -44,11 +44,11 @@ final class RestClient: RestClientProtocol {
     }
 
     // MARK: - Internal Functions
-    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping ([String : Any]) -> T?) {
+    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<T>) -> Void, processResponse: @escaping (Data) -> T?) {
         self.start(target: target, parameters: parameters, headers: nil, completion: completion, processResponse: processResponse)
     }
     
-    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<[T]>) -> Void, processResponse: @escaping ([String : Any]) -> [T]?) {
+    internal func execute<T>(target: Target, parameters: [String : Any]? = nil, completion: @escaping (DataResult<[T]>) -> Void, processResponse: @escaping (Data) -> [T]?) {
         self.start(target: target, parameters: parameters, headers: nil, completion: completion, processResponse: processResponse)
     }
 }

@@ -14,5 +14,5 @@ protocol Target {
     var commonHeaders: [String : String]? { get }
     var method: String { get }
     var url: URL { get }
-    var errorSanitizer: ([String : Any]) throws -> [String : Any] { get }
+    var searchError: ([String : Any]) throws -> [String : Any] { get }
 }

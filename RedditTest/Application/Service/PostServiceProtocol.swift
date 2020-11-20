@@ -7,7 +7,7 @@
 //
 
 protocol PostServiceProtocol {
-    var persistence: PersistenceProtocol { get }
+    var persistence: Persistence { get }
     var restClient: RestClientProtocol { get }
     var currentPostId: String? { get set }
 

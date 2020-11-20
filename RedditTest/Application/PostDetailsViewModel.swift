@@ -16,16 +16,16 @@ class PostDetailsViewModel: BaseViewModelProtocol {
     public weak var navigationDelegate: NavigationDelegate?
 
     @Published var title: String? = ""
-    @Published var thumbnailUrl = URL(string: "http://")!
+    @Published var thumbnail = URL(string: "http://")!
     @Published var author: String? = ""
     @Published var publishedAt = Date()
 
     init() {
         if let currentPostId = postService.currentPostId, let post = postService.getEntityBy(id: currentPostId) {
             title = post.title!
-            thumbnailUrl = post.thumbnailUrl!
+            thumbnail = (post.thumbnail ?? URL(string: "http://"))!
             author = post.author!
-            publishedAt = post.publishedAt!
+            publishedAt = post.publishedAt ?? Date()
         }
     }
 }

@@ -67,7 +67,7 @@ class PostDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.$thumbnailUrl
+        viewModel.$thumbnail
             .sink { [weak self] imageUrl in
                 guard let weakSelf = self else {
                    return

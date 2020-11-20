@@ -9,7 +9,7 @@
 public final class CompositionRoot {
     
     static let dependencies = Dependencies {
-        Module { SQLitePersistence() as PersistenceProtocol }
+        Module { CoreDataPersistence() as Persistence }
         Module { RestClient() as RestClientProtocol }
         Module { PostModule() as PostModuleType }
         Module { SubredditModule() as SubredditModuleType }

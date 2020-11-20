@@ -7,7 +7,7 @@
 //
 
 protocol SubredditServiceProtocol {
-    var persistence: PersistenceProtocol { get }
+    var persistence: Persistence { get }
     
     func getSubreddit(title: String) -> Subreddit?
 }

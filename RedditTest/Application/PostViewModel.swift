@@ -11,10 +11,10 @@ import Foundation
 class PostViewModel {
     @Published var identifier: String
     @Published var title: String
-    @Published var thumbnailUrl: URL
+    @Published var thumbnail: URL
     @Published var author: String
     @Published var subreddit: String
-    @Published var numComments: Int
+    @Published var numComments: Int32
     @Published var publishedAt: Date
     @Published var isVideo: Bool
     @Published var wasViewed: Bool
@@ -22,12 +22,12 @@ class PostViewModel {
     init(post: Post) {
         self.identifier = post.id!
         self.title = post.title!
-        self.thumbnailUrl = post.thumbnailUrl!
+        self.thumbnail = (post.thumbnail ?? URL(string: "http://"))!
         self.author = post.author!
-        self.subreddit = post.subreddit!
-        self.numComments = post.numComments!
-        self.publishedAt = post.publishedAt!
-        self.isVideo = post.isVideo!
+        self.subreddit = post.subreddit ?? ""
+        self.numComments = post.numComments
+        self.publishedAt = post.publishedAt ?? Date()
+        self.isVideo = post.isVideo
         self.wasViewed = post.wasViewed ?? false
     }
 }

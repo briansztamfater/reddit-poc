@@ -9,7 +9,7 @@
 import Foundation
 
 struct SubredditService: SubredditServiceProtocol {
-    @Inject internal var persistence: PersistenceProtocol
+    @Inject internal var persistence: Persistence
 
     public func getSubreddit(title: String) -> Subreddit? {
         return persistence.getCustomBy(attributeName: "title", attributeValue: title)

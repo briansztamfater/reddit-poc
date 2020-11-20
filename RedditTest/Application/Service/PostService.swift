@@ -12,7 +12,7 @@ final class PostService: PostServiceProtocol {
     
     static let shared = PostService()
     
-    @Inject internal var persistence: PersistenceProtocol
+    @Inject internal var persistence: Persistence
     @Inject internal var restClient: RestClientProtocol
 
     public var currentPostId: String?
@@ -21,10 +21,11 @@ final class PostService: PostServiceProtocol {
         restClient.getTop(from: subreddit, before: before, after: after, limit: limit, count: count) { result in
             do {
                 let result = try result.unwrap()
-                let posts = result.0.map({ post -> Post in
-                    let cachedPost = self.getEntityBy(id: post.id!)
-                    post.wasViewed = cachedPost?.wasViewed
-                    post.timestamp = cachedPost?.timestamp ?? post.timestamp
+                let posts = result.0.map({ resultPost -> Post in
+                    var post = resultPost
+                    if let cachedPost = self.getEntityBy(id: post.id!) {
+                        post.wasViewed = cachedPost.wasViewed
+                    }
                     return post
                 })
                 let subreddit = result.1

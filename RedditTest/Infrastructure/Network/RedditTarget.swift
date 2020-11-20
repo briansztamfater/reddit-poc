@@ -49,7 +49,7 @@ enum RedditTarget: Target {
         }
     }
     
-    var errorSanitizer: ([String : Any]) throws -> [String : Any] {
+    var searchError: ([String : Any]) throws -> [String : Any] {
         return { json in return json }
     }
 }
