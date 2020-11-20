@@ -2,7 +2,7 @@
 
 ## MVVM-based Reddit test app for iOS (iPhone / iPad) in Swift
 
-This project contains the codebase for an MVVM-based Reddit test app for iOS (iPhone / iPad) in Swift. It relies on RxSwift library to support data-bindings, and IoC with Dip. Also it implements a view-first navigation.
+This project contains the codebase for an MVVM-based Reddit test app for iOS (iPhone / iPad) in Swift. It relies on Combine framework to support data-bindings, and IoC with property wrappers. Also it implements a view-first navigation.
 
 The structure of the project is as follow:
 
@@ -10,7 +10,7 @@ The structure of the project is as follow:
   - iOS UI (Storyboards, Views/ViewControllers, and other UI components)
 
 - Application Layer
-  - ViewModels, CompositionRoot for Dip framework, and non platform-specific components
+  - ViewModels, CompositionRoot for DI, and non platform-specific components
   
 - Domain Layer
   - Services and models
