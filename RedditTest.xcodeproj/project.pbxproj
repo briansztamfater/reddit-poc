@@ -518,10 +518,9 @@
 			};
 			buildConfigurationList = 9CC384661E7C17AD00595171 /* Build configuration list for PBXProject "RedditTest" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
