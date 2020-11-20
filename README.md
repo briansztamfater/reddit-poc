@@ -20,6 +20,6 @@ The structure of the project is as follow:
 
 ## Screenshots
 
-![Reddit Test on iPad](ipad.png)
-![Reddit Test on iPhone 1](iphone1.png)
-![Reddit Test on iPhone 2](iphone2.png)
+![Reddit Test on iPad](iPad-Screenshot-1.png)
+![Reddit Test on iPhone 1](iPhone-Screenshot-1.png)
+![Reddit Test on iPhone 2](iPhone-Screenshot-2.png)
